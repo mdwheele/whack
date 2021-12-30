@@ -62,5 +62,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mdwheele/whack.git"
+  },
+  "nodemonConfig": {
+    "watch": ["*.js", "openapi.yaml"]
   }
 }
