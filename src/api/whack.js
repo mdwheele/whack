@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }))
 // Register OpenAPI Routes
 app.use(
   OpenApiValidator.middleware({
-    apiSpec: path.resolve(__dirname, '../openapi.yaml'),
+    apiSpec: path.resolve(__dirname, '../../openapi.yaml'),
     validateRequests: true,
     validateResponses: true,
     operationHandlers: {
@@ -21,6 +21,13 @@ app.use(
   }),
 )
 
+// Serve the Vue.js bundle
+app.use(express.static(path.resolve(__dirname, '../../dist')))
+
+// We will need a catch-all route to be able to support 
+// deep-linking into the Vue application.
+
+// Error handler
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message

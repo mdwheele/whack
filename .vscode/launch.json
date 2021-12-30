@@ -12,7 +12,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/api/whack.js"
+      "program": "${workspaceFolder}/src/api/whack.js"
     }
   ]
 }
