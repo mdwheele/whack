@@ -1,30 +1,66 @@
 {
   "name": "whack",
   "version": "1.0.0",
+  "private": true,
   "description": "The Slack clone for cool cats and kittens.",
-  "main": "index.js",
+  "author": {
+    "name": "Dustin Wheeler"
+  },
   "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mdwheele/whack.git"
+  "main": "index.js",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "express": "^4.17.2",
+    "express-openapi-validator": "^4.13.5",
+    "vue": "^3.0.0"
   },
-  "keywords": [],
-  "author": "Dustin Wheeler",
-  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.3",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "jest": "^27.4.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "_id": "whack@1.0.0",
   "bugs": {
     "url": "https://github.com/mdwheele/whack/issues"
   },
   "homepage": "https://github.com/mdwheele/whack#readme",
-  "devDependencies": {
-    "@types/express": "^4.17.13",
-    "@types/jest": "^27.0.3",
-    "jest": "^27.4.5"
-  },
-  "dependencies": {
-    "express": "^4.17.2",
-    "express-openapi-validator": "^4.13.5"
+  "keywords": [],
+  "license": "ISC",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwheele/whack.git"
   }
 }
