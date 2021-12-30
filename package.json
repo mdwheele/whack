@@ -19,7 +19,11 @@
   },
   "homepage": "https://github.com/mdwheele/whack#readme",
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
   }
 }
