@@ -7,8 +7,10 @@
     "name": "Dustin Wheeler"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build:css": "tailwindcss -o ./src/assets/tailwind.css",
+    "serve:css": "tailwindcss -o ./src/assets/tailwind.css --watch",
+    "serve": "concurrently --raw \"npm run serve:css\" \"vue-cli-service serve\"",
+    "build": "npm run build:css && vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "jest",
     "test:watch": "jest --watchAll"
@@ -27,10 +29,14 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "autoprefixer": "^10.4.1",
     "babel-eslint": "^10.1.0",
+    "concurrently": "^6.5.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
-    "jest": "^27.4.5"
+    "jest": "^27.4.5",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.8"
   },
   "eslintConfig": {
     "root": true,
@@ -64,6 +70,9 @@
     "url": "git+https://github.com/mdwheele/whack.git"
   },
   "nodemonConfig": {
-    "watch": ["*.js", "openapi.yaml"]
+    "watch": [
+      "*.js",
+      "openapi.yaml"
+    ]
   }
 }
