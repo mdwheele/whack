@@ -1,0 +1,25 @@
+{
+  "name": "whack",
+  "version": "1.0.0",
+  "description": "The Slack clone for cool cats and kittens.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwheele/whack.git"
+  },
+  "keywords": [],
+  "author": "Dustin Wheeler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdwheele/whack/issues"
+  },
+  "homepage": "https://github.com/mdwheele/whack#readme",
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.5"
+  }
+}
