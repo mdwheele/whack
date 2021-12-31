@@ -15,7 +15,8 @@ module.exports = {
     max: 10
   },
   migrations: {
-    directory: 'database/migrations'
+    directory: 'database/migrations',
+    stub: 'database/migrations/template.stub'
   },
   seeds: {
     directory: 'database/seeds'
