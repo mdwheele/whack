@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  title: Whack
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000/api'
+paths:
+  /hello:
+    parameters: []
+    get:
+      summary: ''
+      operationId: api.hello
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+      description: 'A Hello, World! endpoint to make sure the OpenAPI middleware works.'
+components:
+  schemas: {}

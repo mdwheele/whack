@@ -1,0 +1,78 @@
+{
+  "name": "whack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Slack clone for cool cats and kittens.",
+  "author": {
+    "name": "Dustin Wheeler"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -o ./src/assets/tailwind.css",
+    "serve:css": "tailwindcss -o ./src/assets/tailwind.css --watch",
+    "serve": "concurrently --raw \"npm run serve:css\" \"vue-cli-service serve\"",
+    "build": "npm run build:css && vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "express": "^4.17.2",
+    "express-openapi-validator": "^4.13.5",
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.3",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "autoprefixer": "^10.4.1",
+    "babel-eslint": "^10.1.0",
+    "concurrently": "^6.5.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "jest": "^27.4.5",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.8"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "_id": "whack@1.0.0",
+  "bugs": {
+    "url": "https://github.com/mdwheele/whack/issues"
+  },
+  "homepage": "https://github.com/mdwheele/whack#readme",
+  "keywords": [],
+  "license": "ISC",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwheele/whack.git"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "*.js",
+      "openapi.yaml"
+    ]
+  }
+}

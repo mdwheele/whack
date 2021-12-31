@@ -2,6 +2,9 @@
 
 _The Slack clone for cool cats and kittens._
 
+Stream: https://twitch.tv/mdwheele
+Playlist: https://open.spotify.com/playlist/3G6IXtgNm9UCDQVTo0KUJk?si=3f8287dd90884bec
+
 We could all use some practice. Why not take some time to build a Slack clone in the oddest way possible? That's what this repository is. I'll be streaming development on this application to https://twitch.tv/mdwheele nightly and you can follow along if you want to.
 
 Together, we'll be reviewing tools like Vue, Express, Node, JavaScript, Websockets, Tailwind CSS and whatever else we want to because it's our Slack clone and we'll do what we want to.
