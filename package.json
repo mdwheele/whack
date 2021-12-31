@@ -20,6 +20,8 @@
     "core-js": "^3.6.5",
     "express": "^4.17.2",
     "express-openapi-validator": "^4.13.5",
+    "knex": "^0.95.15",
+    "mysql2": "^2.3.3",
     "vue": "^3.0.0"
   },
   "devDependencies": {
