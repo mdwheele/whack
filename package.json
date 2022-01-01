@@ -23,6 +23,7 @@
     "express-openapi-validator": "^4.13.5",
     "knex": "^0.95.15",
     "mysql2": "^2.3.3",
+    "resemblejs": "^4.0.1",
     "vue": "^3.0.0"
   },
   "devDependencies": {
