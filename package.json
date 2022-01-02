@@ -40,7 +40,8 @@
     "eslint-plugin-vue": "^7.0.0",
     "jest": "^27.4.5",
     "postcss": "^8.4.5",
-    "tailwindcss": "^3.0.8"
+    "tailwindcss": "^3.0.8",
+    "vue-heroicon-next": "^0.4.3"
   },
   "eslintConfig": {
     "root": true,
@@ -54,7 +55,16 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
