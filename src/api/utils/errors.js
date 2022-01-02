@@ -14,3 +14,7 @@ function catchErrors(handler) {
     }
   }
 }
+
+module.exports = {
+  catchErrors
+}

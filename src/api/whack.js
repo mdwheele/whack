@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const OpenApiValidator = require('express-openapi-validator')
+const { catchErrors } = require('./utils/errors')
 
 const app = express()
 
@@ -16,7 +17,17 @@ app.use(
     validateResponses: true,
     operationHandlers: {
       basePath: path.join(__dirname, 'controllers'),
-      resolver: OpenApiValidator.resolvers.modulePathResolver
+      resolver: (handlersPath, route, apiDoc) => {
+        const pathKey = route.openApiRoute.substring(route.basePath.length)
+        const schema = apiDoc.paths[pathKey][route.method.toLowerCase()]
+        const [controller, method] = schema['operationId'].split('.')
+        const modulePath = path.join(handlersPath, controller)
+        const handler = require(modulePath)
+        if (handler[method] === undefined) {
+            throw new Error(`Could not find a [${method}] function in ${modulePath} when trying to route [${route.method} ${route.expressRoute}].`)
+        }
+        return catchErrors(handler[method])
+      }
     },
   }),
 )
