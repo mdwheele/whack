@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import DoodlePassword from './components/DoodlePassword.vue'
+import DoodlePassword from '@/components/DoodlePassword.vue'
 import { ref } from '@vue/reactivity'
 
 export default {
