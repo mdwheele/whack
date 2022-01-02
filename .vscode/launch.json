@@ -27,6 +27,13 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Debug in Browser",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }
