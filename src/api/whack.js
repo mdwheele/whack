@@ -3,7 +3,7 @@ const express = require('express')
 const OpenApiValidator = require('express-openapi-validator')
 const { catchErrors } = require('./utils/errors')
 const cookieParser = require('cookie-parser')
-const { authenticateRequest } = require('./utils/paseto')
+const paseto = require('./utils/paseto')
 
 const app = express()
 
@@ -37,13 +37,8 @@ app.use(
     },
     validateSecurity: {
       handlers: {
-        BasicAuth() {
-          return true
-        },
-        
-        BearerAuth: async (req, scopes, schema) => {
-          return await authenticateRequest(req)
-        },
+        BasicAuth: () => true,      
+        BearerAuth: async req => await paseto.authenticate(req),
       }
     }
   }),

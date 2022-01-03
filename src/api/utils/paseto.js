@@ -32,7 +32,7 @@ async function verify(token) {
  * 
  * @param {import('express').Request} req 
  */
-async function authenticateRequest(req) {
+async function authenticate(req) {
   const token = req.cookies.token
 
   try {
@@ -46,4 +46,4 @@ async function authenticateRequest(req) {
   }
 }
 
-module.exports = { sign, verify, authenticateRequest }
+module.exports = { sign, verify, authenticate }
