@@ -4,7 +4,6 @@ const OpenApiValidator = require('express-openapi-validator')
 const { catchErrors } = require('./utils/errors')
 const cookieParser = require('cookie-parser')
 const { authenticateRequest } = require('./utils/paseto')
-const { authenticate } = require('./middlewares/auth')
 
 const app = express()
 
@@ -43,11 +42,7 @@ app.use(
         },
         
         BearerAuth: async (req, scopes, schema) => {
-          const isAuthenticated = await authenticateRequest(req)
-          
-          await authenticate(req, req.res)
-
-          return isAuthenticated
+          return await authenticateRequest(req)
         },
       }
     }

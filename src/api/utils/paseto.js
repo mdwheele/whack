@@ -36,7 +36,9 @@ async function authenticateRequest(req) {
   const token = req.cookies.token
 
   try {
-    await verify(token)
+    const payload = await verify(token)
+
+    req.res.locals.username = payload.sub
 
     return true
   } catch(error) {
