@@ -23,5 +23,35 @@ paths:
                 required:
                   - message
       description: 'A Hello, World! endpoint to make sure the OpenAPI middleware works.'
+  /login:
+    post:
+      summary: Authenticate to get a Paseto token
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                  - token
+      operationId: auth.login
+      security:
+        - BasicAuth: []
+      parameters: []
 components:
   schemas: {}
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      name: token
+      type: apiKey
+      in: cookie

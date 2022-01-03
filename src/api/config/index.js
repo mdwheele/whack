@@ -7,5 +7,9 @@ module.exports = {
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE || 'whack',
     port: process.env.MYSQL_PORT || 3306
+  },
+  paseto: {
+    private: process.env.PASETO_PRIVATE_KEY,
+    public: process.env.PASETO_PUBLIC_KEY
   }
 }

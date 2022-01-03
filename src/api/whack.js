@@ -2,12 +2,19 @@ const path = require('path')
 const express = require('express')
 const OpenApiValidator = require('express-openapi-validator')
 const { catchErrors } = require('./utils/errors')
+const cookieParser = require('cookie-parser')
+const { authenticateRequest } = require('./utils/paseto')
+const { authenticate } = require('./middlewares/auth')
 
 const app = express()
 
 // Set up Express middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+
+// Need to find a way to set res.locals inside security handler
+// app.use(`/api`, authenticate)
 
 // Register OpenAPI Routes
 app.use(
@@ -29,6 +36,21 @@ app.use(
         return catchErrors(handler[method])
       }
     },
+    validateSecurity: {
+      handlers: {
+        BasicAuth() {
+          return true
+        },
+        
+        BearerAuth: async (req, scopes, schema) => {
+          const isAuthenticated = await authenticateRequest(req)
+          
+          await authenticate(req, req.res)
+
+          return isAuthenticated
+        },
+      }
+    }
   }),
 )
 
