@@ -3,7 +3,7 @@ info:
   title: Whack
   version: '1.0'
 servers:
-  - url: 'http://localhost:3000/api'
+  - url: 'https://whack.chat/api'
 paths:
   /login:
     post:
@@ -27,8 +27,178 @@ paths:
       security:
         - BasicAuth: []
       parameters: []
+  '/channels/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Show Channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+      operationId: channels.show
+      security:
+        - BearerAuth: []
+    put:
+      summary: Update Channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+      operationId: channels.update
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+    delete:
+      summary: Archive Channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+      operationId: channels.archive
+      security:
+        - BearerAuth: []
+  /channels:
+    get:
+      summary: List all channels
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+      operationId: channels.index
+      description: ''
+      security:
+        - BearerAuth: []
+      parameters: []
+    post:
+      summary: Create a new channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+      operationId: channels.create
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+  '/channels/{id}/join':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Join a Channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+      operationId: channels.join
+      security:
+        - BearerAuth: []
+  '/channels/{id}/leave':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Leave a Channel
+      tags:
+        - channels
+      responses:
+        '200':
+          description: OK
+      operationId: channels.leave
+      security:
+        - BearerAuth: []
+      description: ''
+  /me:
+    get:
+      summary: Get information about the current User
+      tags:
+        - me
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  username:
+                    type: string
+      operationId: me.show
+      security:
+        - BearerAuth: []
+  /api/me/channels:
+    get:
+      summary: List of Channels the current User is a Member of
+      tags:
+        - me
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+      operationId: me.channels
+      security:
+        - BearerAuth: []
 components:
-  schemas: {}
+  schemas:
+    Channel:
+      title: Channel
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - name
   securitySchemes:
     BasicAuth:
       type: http
