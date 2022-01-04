@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const http = require('http')
+const https = require('https')
+const express = require('express')
+const app = require('../src/api/app')
+
+// Create an Express app to forward 80 to 443.
+const httpApp = express()
+
+httpApp.get('*', (req, res) => {
+  res.redirect(`https://whack.chat`)
+})
+
+http.createServer(httpApp).listen(80)
+console.log(`Redirecting HTTP traffic on 80 to 443.`)
+
+// Create HTTPS web server
+const server = https.createServer({
+  key: fs.readFileSync('var/ssl/whack_chat.key'),
+  cert: fs.readFileSync('var/ssl/whack_chat.crt'),
+  minVersion: 'TLSv1.2'
+}, app)
+
+server.listen(443)
+console.log(`Server listening on 443.`)

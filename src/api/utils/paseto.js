@@ -38,6 +38,7 @@ async function authenticate(req) {
   try {
     const payload = await verify(token)
 
+    req.res.locals.uid = payload.uid
     req.res.locals.username = payload.sub
 
     return true

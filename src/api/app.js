@@ -57,8 +57,4 @@ app.use((err, req, res, next) => {
   })
 })
 
-// Eventually, the app module will not listen, it will simply
-// export itself and be consumed by bin/www.js
-app.listen(3000, () => {
-  console.log('Listening on 3000...')
-})
+module.exports = app

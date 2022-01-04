@@ -1,7 +1,8 @@
 const knex = require('../utils/database')
 
 class User {
-  constructor(username, password) {
+  constructor(id, username, password) {
+    this.id = id
     this.username = username
     this.password = password
   }
@@ -12,12 +13,13 @@ class User {
     const [user] = await knex('users').where({ username })
 
     if (!user) {
-      await knex('users').insert({ username, password })
+      const [id] = await knex('users').insert({ username, password })
 
-      return new User(username, password)
+      return new User(id, username, password)
     }
 
-    return new User(user.username, user.password)
+    return new User(user.id, user.username, user.password)
+
   }
 }
 
