@@ -12,14 +12,15 @@ exports.login = async (req, res) => {
   }
 
   const token = await sign({
-    sub: user.username
+    sub: user.username,
+    uid: user.id
   })
 
   res.cookie('token', token, { 
     maxAge: 2 * 3600000 /* 2h */,
     httpOnly: true,
     secure: true,
-    domain: 'localhost:3000'
+    domain: 'whack.chat'
   })
 
   res.json({
