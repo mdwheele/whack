@@ -90,7 +90,8 @@
   "nodemonConfig": {
     "watch": [
       "*.js",
-      "openapi.yaml"
+      "openapi.yaml",
+      "bin/www"
     ]
   }
 }
