@@ -5,28 +5,6 @@ info:
 servers:
   - url: 'https://whack.chat/api'
 paths:
-  /login:
-    post:
-      summary: Authenticate to get a Paseto token
-      tags:
-        - authentication
-      responses:
-        '200':
-          description: OK
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                required:
-                  - token
-      operationId: auth.login
-      security:
-        - BasicAuth: []
-      parameters: []
   '/channels/{id}':
     parameters:
       - schema:
@@ -124,6 +102,28 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Channel'
+  /login:
+    post:
+      summary: Authenticate to get a Paseto token
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                  - token
+      operationId: auth.login
+      security:
+        - BasicAuth: []
+      parameters: []
   '/channels/{id}/join':
     parameters:
       - schema:
@@ -179,7 +179,7 @@ paths:
       operationId: me.show
       security:
         - BearerAuth: []
-  /api/me/channels:
+  /me/channels:
     get:
       summary: List of Channels the current User is a Member of
       tags:
@@ -196,6 +196,7 @@ paths:
       operationId: me.channels
       security:
         - BearerAuth: []
+    parameters: []
 components:
   schemas:
     Channel:
