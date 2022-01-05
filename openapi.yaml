@@ -45,6 +45,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Channel'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
       operationId: channels.show
       security:
         - BearerAuth: []

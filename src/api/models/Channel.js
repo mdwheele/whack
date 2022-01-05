@@ -13,7 +13,7 @@ class Channel {
 
   static async create(attributes) {
     const { name, owner } = attributes
-    
+
     const [channel] = await knex('channels').where('name', name)
 
     if (channel) {
@@ -39,6 +39,7 @@ class Channel {
 
   static async all() {
     const channels = await knex('channels')
+      .whereNull('archived_at')
 
     return channels.map(channel => {
       const instance = new Channel(channel.name)
@@ -52,7 +53,13 @@ class Channel {
   }
 
   static async findByRid(rid) {
-    const [channel] = await knex('channels').where('rid', rid)
+    const [channel] = await knex('channels')
+      .where('rid', rid)
+      .whereNull('archived_at')
+
+    if (!channel) {
+      throw { status: 404, message: 'Channel not found.' }
+    }
 
     const instance = new Channel(channel.name)
 
@@ -64,7 +71,11 @@ class Channel {
   }
 
   async archive() {
-    await knex('channels').where('id', this.id).del()
+    await knex('channels')
+      .where('id', this.id)
+      .update({
+        archived_at: new Date()
+      })
   }
 
   toJSON() {
