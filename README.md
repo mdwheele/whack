@@ -3,7 +3,9 @@
 _The Slack clone for cool cats and kittens._
 
 Stream: https://twitch.tv/mdwheele
+
 Playlist: https://open.spotify.com/playlist/3G6IXtgNm9UCDQVTo0KUJk?si=3f8287dd90884bec
+
 Past Streams (YouTube Playlist): https://www.youtube.com/watch?v=B2ScjSRQTQ8&list=PL1Udtohud4182DWznj-1rDCfh71N6Dkot
 
 We could all use some practice. Why not take some time to build a Slack clone in the oddest way possible? That's what this repository is. I'll be streaming development on this application to https://twitch.tv/mdwheele nightly and you can follow along if you want to.
