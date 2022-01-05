@@ -13,6 +13,13 @@ class Channel {
 
   static async create(attributes) {
     const { name, owner } = attributes
+    
+    const [channel] = await knex('channels').where('name', name)
+
+    if (channel) {
+      throw new Error(`Channel with name ${name} already exists.`)
+    }
+
     const rid = nanoid()
 
     const [id] = await knex('channels').insert({
