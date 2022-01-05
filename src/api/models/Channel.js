@@ -11,6 +11,16 @@ class Channel {
     this.owner = null // come back 
   }
 
+  static fromRecord(record) {
+    const instance = new Channel(record.name)
+
+    instance.id = record.id
+    instance.rid = record.rid
+    instance.owner = record.owner
+
+    return instance
+  }
+
   static async create(attributes) {
     const { name, owner } = attributes
 
@@ -28,28 +38,14 @@ class Channel {
       rid,
     })
 
-    const instance = new Channel(name)
-
-    instance.id = id
-    instance.rid = rid
-    instance.owner = owner
-
-    return instance
+    return Channel.fromRecord({ id, rid, owner, name })
   }
 
   static async all() {
     const channels = await knex('channels')
       .whereNull('archived_at')
 
-    return channels.map(channel => {
-      const instance = new Channel(channel.name)
-
-      instance.id = channel.id
-      instance.rid = channel.rid
-      instance.owner = channel.owner_id
-
-      return instance
-    })
+    return channels.map(Channel.fromRecord)
   }
 
   static async findByRid(rid) {
@@ -61,13 +57,7 @@ class Channel {
       throw { status: 404, message: 'Channel not found.' }
     }
 
-    const instance = new Channel(channel.name)
-
-    instance.id = channel.id
-    instance.rid = channel.rid
-    instance.owner = channel.owner_id
-
-    return instance
+    return Channel.fromRecord(channel)
   }
 
   async archive() {
