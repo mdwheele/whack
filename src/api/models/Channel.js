@@ -11,8 +11,25 @@ class Channel {
     this.owner = null // come back 
   }
 
+  static fromRecord(record) {
+    const instance = new Channel(record.name)
+
+    instance.id = record.id
+    instance.rid = record.rid
+    instance.owner = record.owner
+
+    return instance
+  }
+
   static async create(attributes) {
     const { name, owner } = attributes
+
+    const [channel] = await knex('channels').where('name', name)
+
+    if (channel) {
+      throw new Error(`Channel with name ${name} already exists.`)
+    }
+
     const rid = nanoid()
 
     const [id] = await knex('channels').insert({
@@ -21,43 +38,34 @@ class Channel {
       rid,
     })
 
-    const instance = new Channel(name)
-
-    instance.id = id
-    instance.rid = rid
-    instance.owner = owner
-
-    return instance
+    return Channel.fromRecord({ id, rid, owner, name })
   }
 
   static async all() {
     const channels = await knex('channels')
+      .whereNull('archived_at')
 
-    return channels.map(channel => {
-      const instance = new Channel(channel.name)
-
-      instance.id = channel.id
-      instance.rid = channel.rid
-      instance.owner = channel.owner_id
-
-      return instance
-    })
+    return channels.map(Channel.fromRecord)
   }
 
   static async findByRid(rid) {
-    const [channel] = await knex('channels').where('rid', rid)
+    const [channel] = await knex('channels')
+      .where('rid', rid)
+      .whereNull('archived_at')
 
-    const instance = new Channel(channel.name)
+    if (!channel) {
+      throw { status: 404, message: 'Channel not found.' }
+    }
 
-    instance.id = channel.id
-    instance.rid = channel.rid
-    instance.owner = channel.owner_id
-
-    return instance
+    return Channel.fromRecord(channel)
   }
 
   async archive() {
-    await knex('channels').where('id', this.id).del()
+    await knex('channels')
+      .where('id', this.id)
+      .update({
+        archived_at: new Date()
+      })
   }
 
   toJSON() {

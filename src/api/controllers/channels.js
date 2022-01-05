@@ -1,4 +1,5 @@
 const Channel = require("../models/Channel")
+const User = require("../models/User")
 
 
 exports.index = async (req, res) => {
@@ -35,9 +36,17 @@ exports.archive = async (req, res) => {
 }
 
 exports.join = async (req, res) => {
-  res.json({})
+  const user = await User.findById(res.locals.uid)
+
+  await user.joinChannel(req.params.id)
+
+  res.send()
 }
 
 exports.leave = async (req, res) => {
-  res.json({})
+  const user = await User.findById(res.locals.uid)
+
+  await user.leaveChannel(req.params.id)
+
+  res.send()
 }
