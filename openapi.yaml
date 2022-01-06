@@ -197,6 +197,98 @@ paths:
       security:
         - BearerAuth: []
     parameters: []
+  /messages:
+    post:
+      summary: Create a Message
+      tags:
+        - messages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      operationId: messages.create
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+    get:
+      summary: List all Messages
+      tags:
+        - messages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+      operationId: messages.index
+      security:
+        - BearerAuth: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          in: query
+          name: order
+  '/messages/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: Delete a Message
+      tags:
+        - messages
+      responses:
+        '200':
+          description: OK
+      operationId: messages.delete
+      security:
+        - BearerAuth: []
+    put:
+      summary: Update a Message
+      tags:
+        - messages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      operationId: messages.update
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+    get:
+      summary: Show an Individual Message
+      operationId: messages.show
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      security:
+        - BearerAuth: []
 components:
   schemas:
     Channel:
@@ -209,6 +301,23 @@ components:
           type: string
       required:
         - name
+    Message:
+      title: Message
+      type: object
+      properties:
+        id:
+          type: string
+        channel:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - channel
+        - body
   securitySchemes:
     BasicAuth:
       type: http
