@@ -5,13 +5,13 @@ const { default: validator } = require('validator')
 exports.index = async (req, res) => {
   const messages = await Message.filter()
 
-  res.json(messages)
+  res.json(messages.map(message => message.toJSON()))
 }
 
 exports.show = async (req, res) => {
   const message = await Message.findByRid(req.params.id)
 
-  res.json(message)
+  res.json(message.toJSON())
 }
 
 exports.create = async (req, res) => {
@@ -27,21 +27,25 @@ exports.create = async (req, res) => {
     body: req.body.body
   })
 
-  res.json(message)
+  res.json(message.toJSON())
 }
 
 exports.update = async (req, res) => {
-  res.json({})
+  const message = await Message.findByRid(req.params.id)
+
+  if (!validator.isBase64(req.body.body)) { 
+    throw { status: 400, message: 'Message body must be base64-encoded.' }
+  }
+
+  await message.update(res.locals.uid, req.body.body)
+
+  res.json(message.toJSON())
 }
 
 exports.delete = async (req, res) => {
   const message = await Message.findByRid(req.params.id)
 
-  if (message.authorId !== res.locals.uid) {
-    throw new Error('Only the author of a message can delete it.')
-  }
-
-  await message.delete()
+  await message.delete(res.locals.uid)
 
   res.send()
 }
