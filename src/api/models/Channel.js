@@ -48,9 +48,33 @@ class Channel {
     return channels.map(Channel.fromRecord)
   }
 
+  static async findById(id) {
+    const [channel] = await knex('channels')
+      .where('id', id)
+      .whereNull('archived_at')
+
+    if (!channel) {
+      throw { status: 404, message: 'Channel not found.' }
+    }
+
+    return Channel.fromRecord(channel)
+  }
+
   static async findByRid(rid) {
     const [channel] = await knex('channels')
       .where('rid', rid)
+      .whereNull('archived_at')
+
+    if (!channel) {
+      throw { status: 404, message: 'Channel not found.' }
+    }
+
+    return Channel.fromRecord(channel)
+  }
+
+  static async findByName(name) {
+    const [channel] = await knex('channels')
+      .where('name', name)
       .whereNull('archived_at')
 
     if (!channel) {
