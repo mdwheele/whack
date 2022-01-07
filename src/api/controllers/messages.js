@@ -1,31 +1,33 @@
 const Message = require('../models/Message')
+const Channel = require('../models/Channel')
+const { default: validator } = require('validator')
 
 exports.index = async (req, res) => {
-  const messages = await Message.query(query => {
-    if (req.query.order && ['asc', 'desc'].includes(req.query.order)) {
-      query.orderBy('messages.id', req.query.order)
-    }
+  const messages = await Message.filter()
 
-    return query
-  })
-
-  res.json(messages.map(message => message.toJSON()))
+  res.json(messages)
 }
 
 exports.show = async (req, res) => {
   const message = await Message.findByRid(req.params.id)
 
-  res.json(message.toJSON())
+  res.json(message)
 }
 
 exports.create = async (req, res) => {
+  if (!validator.isBase64(req.body.body)) { 
+    throw new Error('Message body must be base64-encoded.')
+  }
+
+  const channel = await Channel.findByRid(req.body.channel)
+
   const message = await Message.send({
-    userId: res.locals.uid,
-    channelId: req.body.channel, 
+    authorId: res.locals.uid,
+    channelId: channel.id, 
     body: req.body.body
   })
 
-  res.json(message.toJSON())
+  res.json(message)
 }
 
 exports.update = async (req, res) => {
@@ -35,7 +37,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   const message = await Message.findByRid(req.params.id)
 
-  if (message.userId !== res.locals.uid) {
+  if (message.authorId !== res.locals.uid) {
     throw new Error('Only the author of a message can delete it.')
   }
 

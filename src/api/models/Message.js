@@ -1,52 +1,43 @@
 const knex = require('../utils/database')
 const nanoid = require('../utils/nanoid')
+const User = require('./User')
 
 class Message {
-  constructor(userId, channelId, body) {
-    this.userId = userId
-    this.channelId = channelId
-    this.body = body
-
+  constructor() {
     this.id = null
     this.rid = null
+    this.body = null
+    this.channelId = null
+    this.authorId = null
     this.createdAt = null
     this.updatedAt = null
   }
 
   static async send(attributes) {
-    const { userId, channelId, body } = attributes
+    const { authorId, channelId, body } = attributes
     const rid = nanoid()
     const now = new Date()
 
-    // TODO: Guard that body is b64-encoded... OR
-    // ... do it for them if not.
-
-    const [channel] = await knex('channels').where('rid', channelId)
-
     const [id] = await knex('messages').insert({
       rid,
-      channel_id: channel.id,
-      author_id: userId,
+      channel_id: channelId,
+      author_id: authorId,
       body,
       created_at: now,
       updated_at: now
     })
 
-    const instance = new Message(userId, channelId, body)
+    const [record] = await this.fetch(query => {
+      query.where('messages.id', id)
+    })
 
-    instance.id = id
-    instance.rid = rid
-    instance.createdAt = now
-    instance.updatedAt = now
-
-    return instance
+    return Message.fromRecord(record)
   }
 
   static async findByRid(rid) {
-    const [record] = await knex('messages')
-      .select('messages.*', 'messages.rid as message_rid', 'channels.rid as channel_rid')
-      .join('channels', 'messages.channel_id', 'channels.id')
-      .where('messages.rid', rid)
+    const [record] = await this.fetch(query => {
+      return query.where('messages.rid', rid)
+    })
 
     if (!record) {
       throw new Error('Message not found.')
@@ -55,24 +46,38 @@ class Message {
     return Message.fromRecord(record) 
   }
 
-  static async query(callback = async knex => await knex) {
-    const query = knex('messages')
-      .select('*', 'messages.rid as message_rid', 'channels.rid as channel_rid')
-      .join('channels', 'messages.channel_id', 'channels.id')
-      .join('users', 'messages.author_id', 'users.id')
-
-    const records = await callback(query)
+  static async filter(callback = async knex => knex) {
+    const records = await this.fetch(callback)
 
     return records.map(Message.fromRecord)
   }
 
-  static fromRecord(record) {
-    const instance = new Message(record.author_id, record.channel_rid, record.body)
+  /**
+   * @private 
+   */
+  static async fetch(callback = async knex => knex) {
+    const query = knex('messages')
+      .join('users', 'messages.author_id', 'users.id')
+      .join('channels', 'messages.channel_id', 'channels.id')
+      .options({ nestTables: true })
 
-    instance.id = record.id
-    instance.rid = record.message_rid
-    instance.createdAt = new Date(record.created_at)
-    instance.updatedAt = new Date(record.updated_at)
+    await callback(query)
+
+    return query
+  }
+
+  static fromRecord(record) {
+    const instance = new Message()
+
+    instance.id = record.messages.id
+    instance.rid = record.messages.rid
+    instance.authorId = record.users.id
+    instance.channelId = record.channels.id
+    instance.body = record.messages.body
+    instance.createdAt = new Date(record.messages.created_at)
+    instance.updatedAt = new Date(record.messages.updated_at)
+
+    instance._record = record
 
     return instance 
   }
@@ -100,7 +105,10 @@ class Message {
   toJSON() {
     return {
       id: this.rid,
-      channel: this.channelId,
+      channel: this._record.channels.rid,
+      author: {
+        username: this._record.users.username,
+      },
       body: this.body,
       created_at: this.createdAt.toISOString(),
       updated_at: this.updatedAt.toISOString()

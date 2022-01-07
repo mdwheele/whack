@@ -5,13 +5,13 @@ const User = require("../models/User")
 exports.index = async (req, res) => {
   const channels = await Channel.all()
 
-  res.json(channels.map(channel => channel.toJSON()))
+  res.json(channels)
 }
 
 exports.show = async (req, res) => {
   const channel = await Channel.findByRid(req.params.id)
 
-  res.json(channel.toJSON())
+  res.json(channel)
 }
 
 exports.create = async (req, res) => {
@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
     owner: res.locals.uid
   })
 
-  res.json(channel.toJSON())
+  res.json(channel)
 }
 
 exports.update = async (req, res) => {

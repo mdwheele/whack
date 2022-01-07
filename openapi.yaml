@@ -307,17 +307,34 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
+        author:
+          type: object
+          required:
+            - username
+          properties:
+            username:
+              type: string
+              readOnly: true
+          readOnly: true
         channel:
           type: string
         body:
           type: string
         created_at:
           type: string
+          readOnly: true
         updated_at:
           type: string
+          readOnly: true
       required:
+        - id
+        - author
         - channel
         - body
+        - created_at
+        - updated_at
+      description: ''
   securitySchemes:
     BasicAuth:
       type: http
