@@ -3,6 +3,7 @@ const { createPrivateKey, createPublicKey } = require('crypto')
 const config = require('../config')
 const fs = require('fs')
 const path = require('path')
+const ms = require('ms')
 
 const projectRoot = path.resolve(__dirname, '../../..')
 
@@ -36,10 +37,22 @@ async function authenticate(req) {
   const token = req.signedCookies.token
 
   try {
+    // Authenticate Paseto token
     const payload = await verify(token)
 
     req.res.locals.uid = payload.uid
     req.res.locals.username = payload.sub
+
+    // Refresh token
+    const freshToken = await sign(payload)
+  
+    req.res.cookie('token', freshToken, { 
+      maxAge: ms('2h'),
+      httpOnly: true,
+      secure: true,
+      domain: 'whack.chat',
+      signed: true
+    })
 
     return true
   } catch(error) {
