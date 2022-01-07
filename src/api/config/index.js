@@ -1,6 +1,9 @@
 require('dotenv').config()
 
 module.exports = {
+  cookie: {
+    secret: process.env.COOKIE_SECRET
+  },
   mysql: {   
     host: process.env.MYSQL_HOST || 'localhost',
     user: process.env.MYSQL_USERNAME || 'root',

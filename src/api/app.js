@@ -4,13 +4,14 @@ const OpenApiValidator = require('express-openapi-validator')
 const { catchErrors } = require('./utils/errors')
 const cookieParser = require('cookie-parser')
 const paseto = require('./utils/paseto')
+const config = require('./config')
 
 const app = express()
 
 // Set up Express middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser())
+app.use(cookieParser(config.cookie.secret))
 
 // Need to find a way to set res.locals inside security handler
 // app.use(`/api`, authenticate)
@@ -55,6 +56,10 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message
   })
+})
+
+process.on('unhandledRejection', reason => {
+  console.log(`Unhandled promise rejection with reason: ${reason}`)
 })
 
 module.exports = app

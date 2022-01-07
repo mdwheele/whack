@@ -7,5 +7,5 @@ exports.show = async (req, res) => {
 exports.channels = async (req, res) => {
   const channels = await ChannelMembership.byUser(res.locals.uid)
 
-  res.json(channels)
+  res.json(channels.map(channel => channel.toJSON()))
 }

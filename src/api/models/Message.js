@@ -40,7 +40,7 @@ class Message {
     })
 
     if (!record) {
-      throw new Error('Message not found.')
+      throw { status: 404, message: 'Message not found.' }
     }
 
     return Message.fromRecord(record) 
@@ -82,13 +82,17 @@ class Message {
     return instance 
   }
 
-  async update(body) {
+  async update(uid, body) {
+    if (this.authorId !== uid) {
+      throw { status: 403, message: 'Only the author of a message can edit it.' }
+    }
+
     const now = new Date()
 
-    await knex('message')
+    await knex('messages')
       .where('id', this.id)
       .update({
-        body: this.body,
+        body,
         updated_at: now
       })
 
@@ -96,7 +100,14 @@ class Message {
     this.updatedAt = now
   }
 
-  async delete() {
+  /**
+   * @param {string} uid the current User ID
+   */
+  async delete(uid) {
+    if ([this._record.channels.owner_id, this.authorId].includes(uid) === false) {
+      throw { status: 403, message: 'Only the author of a message or channel owner can delete it.' }
+    }
+
     await knex('messages')
       .where('id', this.id)
       .del()
