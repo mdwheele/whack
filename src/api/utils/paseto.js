@@ -33,7 +33,7 @@ async function verify(token) {
  * @param {import('express').Request} req 
  */
 async function authenticate(req) {
-  const token = req.cookies.token
+  const token = req.signedCookies.token
 
   try {
     const payload = await verify(token)

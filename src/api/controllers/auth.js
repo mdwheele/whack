@@ -1,4 +1,5 @@
 const auth = require('basic-auth')
+const ms = require('ms')
 const User = require('../models/User')
 const { sign } = require('../utils/paseto')
 
@@ -17,10 +18,11 @@ exports.login = async (req, res) => {
   })
 
   res.cookie('token', token, { 
-    maxAge: 2 * 3600000 /* 2h */,
+    maxAge: ms('2h'),
     httpOnly: true,
     secure: true,
-    domain: 'whack.chat'
+    domain: 'whack.chat',
+    signed: true
   })
 
   res.json({
