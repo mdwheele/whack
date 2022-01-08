@@ -24,7 +24,9 @@ class Channel {
   static async create(attributes) {
     const { name, owner } = attributes
 
-    const [channel] = await knex('channels').where('name', name)
+    const query = knex.table('channels').where('name', name)
+
+    const [channel] = await query
 
     if (channel) {
       throw new Error(`Channel with name ${name} already exists.`)

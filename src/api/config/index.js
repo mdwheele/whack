@@ -9,6 +9,7 @@ module.exports = {
     user: process.env.MYSQL_USERNAME || 'root',
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE || 'whack',
+    test_database: 'whack_test',
     port: process.env.MYSQL_PORT || 3306
   },
   paseto: {
