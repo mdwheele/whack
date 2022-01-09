@@ -289,6 +289,19 @@ paths:
                 $ref: '#/components/schemas/Message'
       security:
         - BearerAuth: []
+  /openapi.yaml:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+      operationId: api.specification
+      security: []
 components:
   schemas:
     Channel:

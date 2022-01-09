@@ -2,6 +2,7 @@ const auth = require('basic-auth')
 const ms = require('ms')
 const User = require('../models/User')
 const { sign } = require('../utils/paseto')
+const config = require('../config')
 
 exports.login = async (req, res) => {
   const { name: username, pass: password } = auth(req)
@@ -21,7 +22,7 @@ exports.login = async (req, res) => {
     maxAge: ms('2h'),
     httpOnly: true,
     secure: true,
-    domain: 'whack.chat',
+    domain: config.server.hostname,
     signed: true
   })
 

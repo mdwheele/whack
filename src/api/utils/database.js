@@ -2,6 +2,4 @@ const knexfile = require('../../../knexfile.js')[process.env.NODE_ENV || 'defaul
 
 const knex = require('knex').knex(knexfile)
 
-
-
 module.exports = knex

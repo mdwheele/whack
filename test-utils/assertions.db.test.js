@@ -18,13 +18,14 @@ test('can assert table has certain amount of rows in it', async () => {
     owner: user.id
   })
 
-  await assertDatabaseCount('channels', 1)
+  await assertDatabaseCount('users', 1)
+  await assertDatabaseHas('users', { username: 'test' })
 
+  await assertDatabaseCount('channels', 1)
   await assertDatabaseHas('channels', { 
     name: 'SGVsbG8K',
     owner_id: 1
   })
-
   await assertDatabaseMissing('channels', { 
     name: 'foo',
     owner_id: 99

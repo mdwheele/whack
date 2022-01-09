@@ -15,5 +15,9 @@ module.exports = {
   paseto: {
     private: process.env.PASETO_PRIVATE_KEY,
     public: process.env.PASETO_PUBLIC_KEY
+  },
+  server: {
+    hostname: process.env.SERVER_HOSTNAME || 'whack.chat',
+    port: process.env.SERVER_PORT || 443
   }
 }
