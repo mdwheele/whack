@@ -12,8 +12,8 @@
     "serve": "concurrently --raw \"npm run serve:css\" \"vue-cli-service serve\"",
     "build": "npm run build:css && vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch"
   },
   "main": "index.js",
   "dependencies": {
