@@ -2,6 +2,8 @@ const NodeEnvironment = require('jest-environment-node')
 const app = require('../src/api/app')
 const config = require('../src/api/config')
 const knex = require('../src/api/utils/database')
+const fs = require('fs')
+const https = require('https')
 
 class ExpressEnvironment extends NodeEnvironment {
   constructor(config, context) {
@@ -26,11 +28,17 @@ class ExpressEnvironment extends NodeEnvironment {
 
     // Start Express server...
     await new Promise(resolve => {
-      server = app.listen(0, config.server.hostname, resolve)
+      server = https.createServer({
+        key: fs.readFileSync('var/ssl/whack_chat.key'),
+        cert: fs.readFileSync('var/ssl/whack_chat.crt'),
+        minVersion: 'TLSv1.2'
+      }, app)
+
+      server.listen(0, config.server.hostname, resolve)
     })
 
     this.global.server = server
-    this.global.address = `http://${config.server.hostname}:${server.address().port}`
+    this.global.address = `https://${config.server.hostname}:${server.address().port}`
   }
 
   async teardown() {

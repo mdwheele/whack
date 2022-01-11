@@ -3,6 +3,7 @@ const express = require('express')
 const OpenApiValidator = require('express-openapi-validator')
 const { catchErrors } = require('./utils/errors')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const paseto = require('./utils/paseto')
 const config = require('./config')
 
@@ -12,6 +13,12 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(config.cookie.secret))
+app.use(
+  cors({
+    credentials: true, 
+    origin: '*'
+  })
+)
 
 // Need to find a way to set res.locals inside security handler
 // app.use(`/api`, authenticate)
@@ -20,8 +27,8 @@ app.use(cookieParser(config.cookie.secret))
 app.use(
   OpenApiValidator.middleware({
     apiSpec: path.resolve(__dirname, '../../openapi.yaml'),
-    validateRequests: true,
-    validateResponses: true,
+    validateRequests: false,
+    validateResponses: false,
     operationHandlers: {
       basePath: path.join(__dirname, 'controllers'),
       resolver: (handlersPath, route, apiDoc) => {

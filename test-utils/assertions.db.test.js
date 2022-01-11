@@ -1,3 +1,7 @@
+/**
+ * @jest-environment ./tests/ExpressEnvironment
+ */
+
 const User = require('../src/api/models/User')
 const Channel = require('../src/api/models/Channel')
 const knex = require('../src/api/utils/database')

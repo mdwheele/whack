@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
     maxAge: ms('2h'),
     httpOnly: true,
     secure: true,
-    domain: config.server.hostname,
+    domain: `${config.server.hostname}`,
     signed: true
   })
 

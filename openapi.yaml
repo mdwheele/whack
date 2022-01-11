@@ -95,13 +95,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Channel'
       operationId: channels.create
-      security:
-        - BearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Channel'
+      security: []
+      description: ''
   /login:
     post:
       summary: Authenticate to get a Paseto token
