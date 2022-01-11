@@ -1,15 +1,7 @@
 const config = require('./src/api/config')
 
-module.exports = {
+const defaults = {
   client: 'mysql2',
-  connection: {
-    host: config.mysql.host,
-    user: config.mysql.user,
-    password: config.mysql.password,
-    database: config.mysql.database,
-    port: config.mysql.port,
-    timezone: 'Z'
-  },
   pool: {
     min: 2,
     max: 10
@@ -20,5 +12,31 @@ module.exports = {
   },
   seeds: {
     directory: 'database/seeds'
+  }
+}
+
+module.exports = {
+  default: {
+    ...defaults,
+    connection: {
+      host: config.mysql.host,
+      user: config.mysql.user,
+      password: config.mysql.password,
+      database: config.mysql.database,
+      port: config.mysql.port,
+      timezone: 'Z'
+    },
+  },
+
+  test: {
+    ...defaults,
+    connection: {
+      host: config.mysql.host,
+      user: config.mysql.user,
+      password: config.mysql.password,
+      database: config.mysql.test_database,
+      port: config.mysql.port,
+      timezone: 'Z'
+    },
   }
 }

@@ -50,7 +50,7 @@ async function authenticate(req) {
       maxAge: ms('2h'),
       httpOnly: true,
       secure: true,
-      domain: 'whack.chat',
+      domain: `${config.server.hostname}`,
       signed: true
     })
 
