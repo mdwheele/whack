@@ -9,6 +9,7 @@ import { useMessages } from './messages'
 test('messages feature test', async () => {
   const { login } = useAuthentication(global.address)
   const { create } = useChannels(global.address)
+  
   await login('whack', 'whack')
   const channel = await create('whack-dev')
 
