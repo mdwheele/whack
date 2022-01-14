@@ -9,10 +9,11 @@ import { ref } from '@vue/reactivity'
 
 import Application from '@/layouts/Application.vue'
 import Empty from '@/layouts/Empty.vue'
+import Playground from '@/layouts/Playground.vue'
 
 export default {
   name: 'App',
-  components: { Application, Empty },
+  components: { Application, Empty, Playground },
 
   setup() {
     const layout = ref('Application')

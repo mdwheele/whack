@@ -116,7 +116,7 @@
         <!-- Channel Banner / Description -->
         <div class="px-6 py-12 flex items-start space-x-3">
           <div class="p-2 bg-slate-200 rounded">
-            <Icon name="speakerphone" class="w-5 h-5 flex-shrink-0 text-gray-800" />
+            <Icon name="speakerphone" outline class="w-5 h-5 flex-shrink-0 text-gray-800" />
           </div>
 
           <div>
@@ -146,7 +146,7 @@
         <!-- Chat Box -->
         <div class="-mt-2 flex flex-col">
           <div class="relative flex-1">
-            <div contenteditable="true" class="bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200"></div>
+            <div @input="message = $event.target.innerText" contenteditable="true" class="bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto">{{ message }}</div>
           </div>
 
           <!-- Toolbar -->
@@ -161,7 +161,7 @@
             </div>
 
             <button>
-              <Icon name="paper-airplane" class="w-4 h-4 rotate-90 flex-shrink-0 text-gray-400" />
+              <Icon name="paper-airplane" class="w-5 h-5 rotate-90 flex-shrink-0 text-gray-400" />
             </button>
           </div>
         </div>
@@ -171,10 +171,17 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import Icon from 'vue-heroicon-next'
 
 export default {
   name: 'Application',
   components: { Icon },
+
+  setup() {
+    const message = ref('hello, world')
+
+    return { message }
+  }
 }
 </script>
