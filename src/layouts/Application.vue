@@ -91,18 +91,25 @@
           </button>
         </div>
       </div>
-
     </div>
     
     <!-- Chat / Messages / Main Content -->
     <div class="flex-1 flex flex-col bg-white">
       <div class="flex items-center justify-between px-4 h-12 border-y border-slate-200">
         <!-- Channel Settings / Modal -->
-        <button class="px-2 py-0.5 flex items-center space-x-1 rounded hover:bg-slate-50">
-          <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-          <span class="font-bold text-lg leading-6">general</span>
-          <Icon name="chevron-down" class="w-3 h-3 flex-shrink-0" />
-        </button>
+        <Modal>
+          <template #trigger="{ open }" >
+            <button @click="open" class="px-2 py-0.5 flex items-center space-x-1 rounded hover:bg-slate-50">
+              <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
+              <span class="font-bold text-lg leading-6">general</span>
+              <Icon name="chevron-down" class="w-3 h-3 flex-shrink-0" />
+            </button>
+          </template>
+
+          <template #default>
+            <h1>Hello, World 2!</h1>
+          </template>
+        </Modal>
 
         <!-- Channel List /who --> 
         <button class="rounded py-1 px-2 border flex items-center space-x-2" v-tippy="{ placement: 'bottom-end' }" content="View all members of this channel">
@@ -173,13 +180,14 @@
 <script>
 import { ref } from 'vue'
 import Icon from 'vue-heroicon-next'
+import Modal from '@/components/Common/Modal.vue'
 
 export default {
   name: 'Application',
-  components: { Icon },
+  components: { Icon, Modal },
 
   setup() {
-    const message = ref('hello, world')
+    const message = ref('')
 
     return { message }
   }

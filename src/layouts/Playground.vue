@@ -1,55 +1,104 @@
 <template>
-  <div class="bg-indigo-800 flex flex-col items-center py-16">
-    <div class="w-32 h-32">
-      <TransitionRoot
-        appear
-        :show="isShowing"
-        as="template"
-        enter="transform transition duration-[400ms]"
-        enter-from="opacity-0 rotate-[-120deg] scale-50"
-        enter-to="opacity-100 rotate-0 scale-100"
-        leave="transform duration-200 transition ease-in-out"
-        leave-from="opacity-100 rotate-0 scale-100 "
-        leave-to="opacity-0 scale-95 "
-      >
-        <div class="w-full h-full bg-white rounded-md shadow-lg" />
-      </TransitionRoot>
-    </div>
+  <div class="fixed inset-0 flex items-center justify-center">
     <button
-      @click="resetIsShowing"
-      class="flex items-center px-3 py-2 mt-8 text-sm font-medium text-white transition transform bg-black rounded-full active:bg-opacity-40 hover:scale-105 hover:bg-opacity-30 focus:outline-none bg-opacity-20"
+      type="button"
+      @click="openModal"
+      class="px-4 py-2 text-sm font-medium text-white bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
     >
-      <svg viewBox="0 0 20 20" fill="none" class="w-5 h-5 opacity-70">
-        <path
-          d="M14.9497 14.9498C12.2161 17.6835 7.78392 17.6835 5.05025 14.9498C2.31658 12.2162 2.31658 7.784 5.05025 5.05033C7.78392 2.31666 12.2161 2.31666 14.9497 5.05033C15.5333 5.63385 15.9922 6.29475 16.3266 7M16.9497 2L17 7H16.3266M12 7L16.3266 7"
-          stroke="currentColor"
-          stroke-width="1.5"
-        />
-      </svg>
-
-      <span class="ml-3">Click to transition</span>
+      Open dialog
     </button>
   </div>
+  <TransitionRoot appear :show="isOpen" as="template">
+    <Dialog as="div" @close="closeModal">
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="min-h-screen px-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay class="fixed inset-0" />
+          </TransitionChild>
+
+          <span class="inline-block h-screen align-middle" aria-hidden="true">
+            &#8203;
+          </span>
+
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <div
+              class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+            >
+              <DialogTitle
+                as="h3"
+                class="text-lg font-medium leading-6 text-gray-900"
+              >
+                Payment successful
+              </DialogTitle>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  Your payment has been successfully submitted. We’ve sent you
+                  an email with all of the details of your order.
+                </p>
+              </div>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  class="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                  @click="closeModal"
+                >
+                  Got it, thanks!
+                </button>
+              </div>
+            </div>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { TransitionRoot } from '@headlessui/vue'
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogOverlay,
+  DialogTitle,
+} from '@headlessui/vue'
 
 export default {
-  components: { TransitionRoot },
+  components: {
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogOverlay,
+    DialogTitle,
+  },
 
   setup() {
-    const isShowing = ref(true)
+    const isOpen = ref(true)
 
     return {
-      isShowing,
-      resetIsShowing() {
-        isShowing.value = false
-
-        setTimeout(() => {
-          isShowing.value = true
-        }, 500)
+      isOpen,
+      closeModal() {
+        isOpen.value = false
+      },
+      openModal() {
+        isOpen.value = true
       },
     }
   },
