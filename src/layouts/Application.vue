@@ -106,8 +106,47 @@
             </button>
           </template>
 
-          <template #default>
-            <h1>Hello, World 2!</h1>
+          <template #default="{ close }">
+            <div class="flex flex-col">
+              <div class="flex items-center justify-between">
+                <h2 class="flex items-center space-x-1">
+                  <Icon name="hashtag" class="mt-0.5 w-5 h-5 flex-shrink-0" />
+                  <span class="text-xl font-bold text-gray-800">general</span>
+                </h2>
+                <button @click="close">
+                  <Icon name="x" outline class="w-5 h-5 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              <div class="mt-4 border-b -mx-6 px-6">
+                <nav>
+                  <ul class="-mb-px flex items-center text-sm text-gray-600 space-x-6 cursor-pointer">
+                    <li class="py-1 border-b-2 border-blue-700 font-semibold text-gray-900">About</li>
+                    <li class="py-1 hover:text-gray-900 border-b-2 border-transparent">Members</li>
+                  </ul>
+                </nav>
+              </div>
+
+              <div class="-mx-6 -mb-6 py-4 px-6 bg-gray-100 space-y-4">
+                <div class="flex items-start justify-between p-4 bg-white text-sm border rounded-xl">
+                  <div>
+                    <h3 class="font-semibold text-gray-800">Channel name</h3>
+                    <p class="text-gray-600"># general</p>
+                  </div>
+                  
+                  <button class="text-blue-800 hover:underline">Edit</button>
+                </div>
+                
+                <div class="flex items-start justify-between p-4 bg-white text-sm border rounded-xl">
+                  <div>
+                    <h3 class="font-semibold text-gray-800">A bunch of text!</h3>
+                    <p class="text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum neque quisquam sit? Magni, voluptates totam iste ipsa placeat quia molestiae vel sequi, esse, consequuntur modi quas excepturi blanditiis nobis delectus repellat aperiam facilis! Repellendus in unde saepe accusantium laboriosam dignissimos dolor, facilis error non itaque iusto aspernatur modi magni voluptatibus.</p>
+                  </div>
+                  
+                  <button class="text-blue-800 hover:underline">Edit</button>
+                </div>
+              </div>
+            </div>
           </template>
         </Modal>
 
