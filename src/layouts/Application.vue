@@ -11,9 +11,16 @@
       <span class="text-sm">Search Whack Chat</span>
     </button>
     <div class="w-64 pr-3 flex items-center justify-end">
-      <button class="relative w-7 h-7 bg-white rounded" v-tippy content="mdwheele">
-        <div class="absolute -bottom-0.5 -right-0.5 rounded-full bg-green-600 w-2.5 h-2.5 p-1 ring-2 border border-slate-800 ring-slate-800" />
-      </button>
+      <Dropdown>
+        <template #trigger>
+          <button class="relative w-7 h-7 bg-white rounded" v-tippy content="mdwheele">
+            <div class="absolute -bottom-0.5 -right-0.5 rounded-full bg-green-600 w-2.5 h-2.5 p-1 ring-2 border border-slate-800 ring-slate-800" />
+          </button>
+        </template>
+
+        <template #default>
+        </template>
+      </Dropdown>
     </div>
   </div>
 
@@ -220,10 +227,11 @@
 import { ref } from 'vue'
 import Icon from 'vue-heroicon-next'
 import Modal from '@/components/Common/Modal.vue'
+import Dropdown from '@/components/Common/Dropdown.vue'
 
 export default {
   name: 'Application',
-  components: { Icon, Modal },
+  components: { Icon, Modal, Dropdown },
 
   setup() {
     const message = ref('')
