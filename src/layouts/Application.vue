@@ -206,7 +206,7 @@
           <div class="flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 py-2 px-3">
             <div class="space-x-2">
               <button class="group p-1 rounded hover:bg-gray-100">
-                <Icon name="emoji-happy" class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
+                <Icon name="emoji-happy" outline class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
               </button>
               <button class="group p-1 rounded hover:bg-gray-100">
                 <Icon name="at-symbol" class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
