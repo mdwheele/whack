@@ -9,7 +9,7 @@
   "scripts": {
     "build:css": "tailwindcss -o ./src/assets/tailwind.css",
     "serve:css": "tailwindcss -o ./src/assets/tailwind.css --watch",
-    "serve": "concurrently --raw \"npm run serve:css\" \"vue-cli-service serve\"",
+    "serve": "concurrently --raw \"npm run serve:css\" \"NODE_OPTIONS='--max-http-header-size=200000' vue-cli-service serve\"",
     "build": "npm run build:css && vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "jest --forceExit",
@@ -98,7 +98,7 @@
   },
   "nodemonConfig": {
     "watch": [
-      "src/api/*.js",
+      "src/api/**/*.js",
       "openapi.yaml",
       "bin/www"
     ]

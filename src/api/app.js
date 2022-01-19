@@ -13,10 +13,23 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(config.cookie.secret))
+
+const allowedOrigins = [
+  `https://${config.server.hostname}`,
+  `https://${config.server.hostname}:8080`,
+]
+
 app.use(
   cors({
     credentials: true, 
-    origin: '*'
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    origin: (origin, callback) => {
+      if (origin === undefined || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error(`${origin} not allowed by CORS policy`))
+      }
+    }
   })
 )
 
@@ -55,8 +68,11 @@ app.use(
 // Serve the Vue.js bundle
 app.use(express.static(path.resolve(__dirname, '../../dist')))
 
-// We will need a catch-all route to be able to support 
-// deep-linking into the Vue application.
+// Catch-all route to allow for "deep-linking" into the
+// Vue.js application
+app.all("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'))
+})
 
 // Error handler
 app.use((err, req, res, next) => {

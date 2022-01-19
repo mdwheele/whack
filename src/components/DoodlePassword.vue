@@ -1,8 +1,8 @@
 <template>
-  <div class="relative border">
+  <div class="relative" :class="coverageIsMet ? 'border-4 border-green-500' : 'border'">
     <!-- Toolbar -->
     <div class="absolute top-2 right-2">
-      <button @click="randomBackdrop" title="Random Backdrop">
+      <button @click="nextBackdrop" title="Random Backdrop">
         <Icon name="refresh" class="w-6 h-6 text-white" />
       </button>
     </div>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watchEffect, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, watchEffect, onBeforeUnmount } from 'vue'
 
 import Earth from '@/assets/doodles/earth.jpg'
 import Tiger from '@/assets/doodles/tiger.jpg'
@@ -23,13 +23,25 @@ const backdrops = [Earth, Tiger]
 
 export default {
   components: { Icon },
+  
+  props: {
+    coverage: {
+      type: Number,
+      default: 350
+    }
+  },
 
   setup(props, { emit }) {
     const canvas = ref(null)
     const currentBackdropIndex = ref(0)
+    const currentCoverage = ref(props.coverage)
 
-    function randomBackdrop() {
-      currentBackdropIndex.value = Math.floor(Math.random() * backdrops.length)
+    const coverageIsMet = computed(() => currentCoverage.value < 0)
+
+    function nextBackdrop() {
+      if (++currentBackdropIndex.value > backdrops.length - 1) {
+        currentBackdropIndex.value = 0
+      }
     }
     
     onMounted(() => {
@@ -42,19 +54,18 @@ export default {
         image.src = backdrops[currentBackdropIndex.value]
         image.onload = () => {
           context.drawImage(image, 0, 0, 300, 300)
-
-          emit('finish', canvas.value.toDataURL())
         }
       })
 
       function draw(x, y, dx, dy) {
         context.beginPath()
         context.strokeStyle = 'pink'
-        context.lineWidth = 5
+        context.lineWidth = 10
         context.moveTo(x, y)
         context.lineTo(dx, dy)
         context.stroke()
         context.closePath()
+        currentCoverage.value = currentCoverage.value - 1
       }
 
       function onMouseDown(e) {
@@ -75,7 +86,9 @@ export default {
         isDrawing = false
         x = y = null
 
-        emit('finish', canvas.value.toDataURL())
+        if (currentCoverage.value <= 0) {
+          emit('finish', canvas.value.toDataURL())
+        }
       }
 
       canvas.value.addEventListener('mousedown', onMouseDown)
@@ -91,7 +104,8 @@ export default {
 
     return {
       canvas,
-      randomBackdrop
+      nextBackdrop,
+      coverageIsMet
     }
   }
 }
