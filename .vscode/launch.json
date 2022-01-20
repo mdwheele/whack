@@ -9,6 +9,9 @@
       "request": "launch",
       "name": "Debug API",
       "runtimeExecutable": "nodemon",
+      "runtimeArgs": [
+        "--max-http-header-size=200000"
+      ],
       "skipFiles": [
         "<node_internals>/**"
       ],

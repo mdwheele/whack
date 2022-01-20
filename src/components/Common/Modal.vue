@@ -1,7 +1,7 @@
 <template>
   <slot name="trigger" :open="open" :isOpen="isOpen" />
 
-  <TransitionRoot as="template" :show="isOpen">
+  <TransitionRoot as="template" :show="isOpen" @after-leave="emit('update:modelValue', false)">
     <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="close">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
@@ -21,34 +21,41 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import Icon from 'vue-heroicon-next'
 
 export default {
-  components: {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
-    TransitionChild,
-    TransitionRoot,
-    Icon,
+  components: { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot, Icon },
+
+  props: {
+    modelValue: {
+      type: Boolean,
+      required: false,
+    }
   },
-  setup() {
+
+  setup(props, { emit }) {
     const isOpen = ref(false)
 
     function open() {
       isOpen.value = true
+      emit('update:modelValue', true)
     }
     
     function close() {
       isOpen.value = false
     }
 
+    watchEffect(() => {
+      isOpen.value = props.modelValue
+    })
+
     return {
       isOpen,
       open,
-      close
+      close,
+      emit
     }
   },
 }

@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { computed } from '@vue/reactivity'
+import { useRoute } from 'vue-router'
 
 import Application from '@/layouts/Application.vue'
 import Empty from '@/layouts/Empty.vue'
@@ -16,7 +17,9 @@ export default {
   components: { Application, Empty, Playground },
 
   setup() {
-    const layout = ref('Application')
+    const route = useRoute()
+
+    const layout = computed(() => route.meta.layout || 'Application')
 
     return {
       layout

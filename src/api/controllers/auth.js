@@ -3,14 +3,21 @@ const ms = require('ms')
 const User = require('../models/User')
 const { sign } = require('../utils/paseto')
 const config = require('../config')
+const { compare } = require('../utils/image')
 
 exports.login = async (req, res) => {
   const { name: username, pass: password } = auth(req)
 
+  if (!password) {
+    throw { status: 401, message: 'Invalid password' }
+  }
+
   const user = await User.findOrCreate({ username, password }) 
 
-  if (user.password !== password) {
-    throw new Error('Invalid password')
+  const confidence = await compare(user.password, password)
+
+  if (confidence < 0.95) {
+    throw { status: 401, message: 'Invalid password' }
   }
 
   const token = await sign({

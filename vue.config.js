@@ -8,12 +8,17 @@ module.exports = {
 
   devServer: {
     host: '0.0.0.0',
-    public: `https://${config.server.hostname}:8080`,
+    public: config.server.hostname,
     https: {
       key: fs.readFileSync('var/ssl/whack_chat.key'),
       cert: fs.readFileSync('var/ssl/whack_chat.crt'),
     },
     hot: true,
-    disableHostCheck: true
+    disableHostCheck: true,
+    proxy: {
+      '/api': {
+        target: `https://${config.server.hostname}`
+      }
+    }
   }
 }
