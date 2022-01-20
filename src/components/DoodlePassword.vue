@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" :class="coverageIsMet ? 'border-4 border-green-500' : 'border'">
+  <div class="relative rounded-lg overflow-hidden">
     <!-- Toolbar -->
     <div class="absolute top-2 right-2">
       <button @click="nextBackdrop" title="Random Backdrop">
@@ -59,8 +59,11 @@ export default {
 
       function draw(x, y, dx, dy) {
         context.beginPath()
-        context.strokeStyle = 'pink'
+
         context.lineWidth = 10
+        context.lineCap = 'round'
+        context.strokeStyle = 'pink'
+
         context.moveTo(x, y)
         context.lineTo(dx, dy)
         context.stroke()
