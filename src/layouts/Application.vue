@@ -13,9 +13,10 @@
     <div class="w-64 pr-3 flex items-center justify-end">
       <Dropdown>
         <template #trigger>
-          <button class="relative w-7 h-7 bg-white rounded" v-tippy content="mdwheele">
+          <div class="mt-1.5 relative rounded bg-white p-0.5" v-tippy content="mdwheele">
+            <Identicon seed="mdwheele" class="w-6 h-6 rounded" />
             <div class="absolute -bottom-0.5 -right-0.5 rounded-full bg-green-600 w-2.5 h-2.5 p-1 ring-2 border border-slate-800 ring-slate-800" />
-          </button>
+          </div>
         </template>
 
         <template #default>
@@ -108,9 +109,10 @@
 import { ref } from 'vue'
 import Icon from 'vue-heroicon-next'
 import Dropdown from '@/components/Common/Dropdown.vue'
+import Identicon from 'vue-identicon'
 
 export default {
   name: 'Application',
-  components: { Icon, Dropdown }
+  components: { Icon, Identicon, Dropdown }
 }
 </script>
