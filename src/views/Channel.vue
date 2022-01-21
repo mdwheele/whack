@@ -1,13 +1,13 @@
 <template>
   <!-- Chat / Messages / Main Content -->
-  <div class="flex-1 flex flex-col bg-white">
+  <div class="flex-1 flex flex-col bg-white" v-if="channel">
     <div class="flex items-center justify-between px-4 h-12 border-y border-slate-200">
       <!-- Channel Settings / Modal -->
       <Modal>
         <template #trigger="{ open }" >
           <button @click="open" class="px-2 py-0.5 flex items-center space-x-1 rounded hover:bg-slate-50">
             <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="font-bold text-lg leading-6">general</span>
+            <span class="font-bold text-lg leading-6">{{ channel.name }}</span>
             <Icon name="chevron-down" class="w-3 h-3 flex-shrink-0" />
           </button>
         </template>
@@ -17,7 +17,7 @@
             <div class="flex items-center justify-between">
               <h2 class="flex items-center space-x-1">
                 <Icon name="hashtag" class="mt-0.5 w-5 h-5 flex-shrink-0" />
-                <span class="text-xl font-bold text-gray-800">general</span>
+                <span class="text-xl font-bold text-gray-800">{{ channel.name }}</span>
               </h2>
               <button @click="close">
                 <Icon name="x" outline class="w-5 h-5 text-gray-500 flex-shrink-0" />
@@ -72,7 +72,7 @@
         </div>
 
         <div>
-          <h3 class="mb-1 font-semibold text-gray-800">You're looking at the <span class="text-blue-800">#general</span> channel</h3>
+          <h3 class="mb-1 font-semibold text-gray-800">You're looking at the <span class="text-blue-800">#{{ channel.name }}</span> channel</h3>
           <p class="leading-5 text-gray-400">This is the one channel that will always include everyone. It's a great spot for announcements and team-wide conversations. <a href="#" class="text-blue-700 hover:underline">Edit description</a></p>
         </div>
       </div>  
@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <div class="z-10 px-6 h-16">
+    <div class="z-10 px-6 h-16" v-if="isMemberOfChannel">
       <!-- Chat Box -->
       <div class="-mt-2 flex flex-col">
         <div class="relative flex-1">
@@ -118,11 +118,20 @@
         </div>
       </div>
     </div>
+    <div v-else class="flex flex-col items-center bg-gray-100 py-6 space-y-4" >
+      <p class="text-lg text-gray-800">You are viewing #{{ channel.name }}</p>
+      <div>
+        <button @click="join(channel.id)" class="rounded border border-gray-300 bg-green-800 hover:bg-green-700 py-2 px-3 text-white text-sm tracking-wide hover:shadow-sm">Join Channel</button>
+      </div>
+      <AppLink :to="{ name: 'channel.browser' }" class="underline text-gray-600">Back to Channel browser</AppLink>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed, watchEffect, onMounted } from 'vue'
+import { useChannels } from '@/composables/channels'
+import { useRoute } from 'vue-router'
 
 import Icon from 'vue-heroicon-next'
 import Modal from '@/components/Common/Modal.vue'
@@ -133,9 +142,33 @@ export default {
   components: { Icon, Modal },
 
   setup() {
+    const { findById, listJoinedChannels, join } = useChannels()
+    const route = useRoute()
+
+    const channel = ref(null)
+    const joinedChannels = ref([])
     const message = ref('')
 
-    return { message }
+    const isMemberOfChannel = computed(() => {
+      return joinedChannels.value.some(joinedChannel => channel.value.id === joinedChannel.id)
+    })
+
+    onMounted(async () => {
+      joinedChannels.value = await listJoinedChannels()
+    })
+
+    watchEffect(async () => {
+      if (route.params.id) {
+        channel.value = await findById(route.params.id)
+      }
+    })
+
+    return { 
+      isMemberOfChannel,
+      message, 
+      channel,
+      join
+    }
   }
 }
 </script>

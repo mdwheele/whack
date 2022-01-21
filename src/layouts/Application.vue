@@ -43,6 +43,16 @@
           </button>
       </div>
 
+      <!-- Sidebar Items -->
+      <div class="mt-3">
+        <AppLink :to="{ name: 'channel.browser' }" class="w-full py-1 pl-7 pr-4 flex items-center space-x-2" active-class="text-white bg-sky-700" inactive-class="text-slate-300 hover:bg-slate-800">
+          <div class="relative">
+            <Icon name="search" class="w-4 h-4 flex-shrink-0" />
+          </div>
+          <span class="truncate">Channel browser</span>
+        </AppLink>
+      </div>
+
       <!-- Possible Collapsible List Component Thing -->
       <div class="mt-3">
         <!-- ListHeader -->
@@ -67,28 +77,16 @@
 
         <div>
           <!-- ListItem (Active Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300', 'bg-sky-700']">
+          <AppLink 
+            v-for="channel in joinedChannels" :key="channel.id"
+            :to="{ name: 'channels.show', params: { id: channel.id }}" 
+            class="w-full py-1 pl-7 pr-4 flex items-center space-x-2" 
+            active-class="text-white bg-sky-700"
+            inactive-class="text-slate-300 hover:bg-slate-800"
+          >
             <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">general</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">random</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">really-long-channel-name-to-test-padding</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">whack-dev</span>
-          </button>
+            <span class="truncate">{{ channel.name }}</span>
+          </AppLink>
 
           <!-- ListItem (Add Channels Button) -->
           <button :class="['w-full py-1 pl-6 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
@@ -106,13 +104,22 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import Icon from 'vue-heroicon-next'
+import { ref, onMounted } from 'vue'
+import { useChannels } from '@/composables/channels'
 import Dropdown from '@/components/Common/Dropdown.vue'
+import Icon from 'vue-heroicon-next'
 import Identicon from 'vue-identicon'
 
 export default {
   name: 'Application',
-  components: { Icon, Identicon, Dropdown }
+  components: { Icon, Identicon, Dropdown },
+
+  setup() {
+    const { joinedChannels } = useChannels()
+
+    return {
+      joinedChannels
+    }
+  }
 }
 </script>

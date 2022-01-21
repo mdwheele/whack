@@ -8,7 +8,7 @@ import VueTippy from 'vue-tippy'
 import 'tippy.js/dist/tippy.css'
 
 function lazy(view) {
-  return import(`@/views/${view}`)
+  return () => import(`@/views/${view}`)
 }
 
 import Login from '@/views/Login.vue'
@@ -29,6 +29,15 @@ const routes = [
     path: '/channels/:id',
     name: 'channels.show', 
     component: Channel,
+    meta: {
+      layout: 'Application'
+    }
+  },
+
+  { 
+    path: '/browse-channels',
+    name: 'channel.browser', 
+    component: lazy('ChannelBrowser'),
     meta: {
       layout: 'Application'
     }
@@ -56,6 +65,9 @@ router.beforeEach(async (to, from, next) => {
 })
 
 const app = createApp(App)
+
+import AppLink from '@/components/Common/AppLink.vue'
+app.component('AppLink', AppLink)
 
 app.use(router)
 
