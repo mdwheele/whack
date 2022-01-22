@@ -37,7 +37,7 @@
               <div class="flex items-start justify-between p-4 bg-white text-sm border rounded-xl">
                 <div>
                   <h3 class="font-semibold text-gray-800">Channel name</h3>
-                  <p class="text-gray-600"># general</p>
+                  <p class="text-gray-600"># {{ channel.name }}</p>
                 </div>
                 
                 <button class="text-blue-800 hover:underline">Edit</button>
@@ -142,19 +142,14 @@ export default {
   components: { Icon, Modal },
 
   setup() {
-    const { findById, listJoinedChannels, join } = useChannels()
+    const { findById, joinedChannels, join } = useChannels()
     const route = useRoute()
 
     const channel = ref(null)
-    const joinedChannels = ref([])
     const message = ref('')
 
     const isMemberOfChannel = computed(() => {
       return joinedChannels.value.some(joinedChannel => channel.value.id === joinedChannel.id)
-    })
-
-    onMounted(async () => {
-      joinedChannels.value = await listJoinedChannels()
     })
 
     watchEffect(async () => {

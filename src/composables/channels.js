@@ -1,7 +1,12 @@
 import axios from '../axios'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { sortBy } from 'lodash'
 
 const joinedChannels = ref([])
+
+const sortedChannels = computed(() => {
+  return sortBy(joinedChannels.value, ['name'])
+})
 
 export function useChannels(url) {
   onMounted(async () => {
@@ -74,6 +79,6 @@ export function useChannels(url) {
     join,
     leave,
     archive,
-    joinedChannels
+    joinedChannels: sortedChannels
   }
 }
