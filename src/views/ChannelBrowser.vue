@@ -17,7 +17,7 @@
       </div>
 
       <div class="mt-8 flex justify-between">
-        <span class="text-sm text-gray-800">4 recommended results</span>
+        <span class="text-sm text-gray-800">{{ results.length }} recommended results</span>
       </div>
     </div>
 

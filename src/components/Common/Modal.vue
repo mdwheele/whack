@@ -39,6 +39,7 @@ export default {
     const isOpen = ref(false)
 
     function open() {
+      console.log('modal: open')
       isOpen.value = true
       emit('update:modelValue', true)
     }

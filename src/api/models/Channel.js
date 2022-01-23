@@ -42,7 +42,12 @@ class Channel {
       rid,
     })
 
-    return Channel.fromRecord({ id, rid, owner, name })
+    const [freshChannel] = await this.fetch(query => {
+      query.whereNull('archived_at')
+        .where('id', id)
+    })
+
+    return Channel.fromRecord(freshChannel)
   }
 
   static async all() {
