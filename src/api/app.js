@@ -40,8 +40,8 @@ app.use(
 app.use(
   OpenApiValidator.middleware({
     apiSpec: path.resolve(__dirname, '../../openapi.yaml'),
-    validateRequests: false,
-    validateResponses: false,
+    validateRequests: true,
+    validateResponses: true,
     operationHandlers: {
       basePath: path.join(__dirname, 'controllers'),
       resolver: (handlersPath, route, apiDoc) => {

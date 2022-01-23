@@ -11,16 +11,34 @@
       <span class="text-sm">Search Whack Chat</span>
     </button>
     <div class="w-64 pr-3 flex items-center justify-end">
-      <Dropdown>
+      <Menu>
         <template #trigger>
-          <button class="relative w-7 h-7 bg-white rounded" v-tippy content="mdwheele">
+          <div class="mt-1.5 relative rounded bg-white p-0.5" v-tippy content="mdwheele">
+            <Identicon seed="mdwheele" class="w-6 h-6 rounded" />
             <div class="absolute -bottom-0.5 -right-0.5 rounded-full bg-green-600 w-2.5 h-2.5 p-1 ring-2 border border-slate-800 ring-slate-800" />
-          </button>
+          </div>
+        </template>
+
+        <template #header>  
+          <div class="px-6 py-4">
+            <div class="flex items-start space-x-4">
+              <div class="relative w-7 h-7 bg-white rounded" />
+
+              <div>
+                <div class="font-extrabold text-sm">mdwheele</div>
+                <div class="flex items-center space-x-1">
+                  <div class="w-2.5 h-2.5 bg-green-700 rounded-full" />
+                  <span class="text-xs text-gray-500">Active</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </template>
 
         <template #default>
+          <MenuItem>Sign out</MenuItem>
         </template>
-      </Dropdown>
+      </Menu>
     </div>
   </div>
 
@@ -42,6 +60,16 @@
           </button>
       </div>
 
+      <!-- Sidebar Items -->
+      <div class="mt-3">
+        <AppLink :to="{ name: 'channel.browser' }" class="w-full py-1 pl-7 pr-4 flex items-center space-x-2" active-class="text-white bg-sky-700" inactive-class="text-slate-300 hover:bg-slate-800">
+          <div class="relative">
+            <Icon name="search" class="w-4 h-4 flex-shrink-0" />
+          </div>
+          <span class="truncate">Channel browser</span>
+        </AppLink>
+      </div>
+
       <!-- Possible Collapsible List Component Thing -->
       <div class="mt-3">
         <!-- ListHeader -->
@@ -54,43 +82,40 @@
           </div>
 
           <div>
-            <!-- <Button icon="dots-vertical /> -->
-            <button class="p-1.5 rounded hover:bg-slate-600" v-tippy content="Section Options">
-              <Icon name="dots-vertical" class="w-4 h-4" />
-            </button>
-            <button class="p-1.5 rounded hover:bg-slate-600" v-tippy content="Add Channels"> 
-              <Icon name="plus" class="w-4 h-4" />
-            </button>
+            <Menu>
+              <template #trigger>
+                <button class="p-1.5 rounded hover:bg-slate-600" v-tippy content="Add Channels"> 
+                  <Icon name="plus" class="w-4 h-4" />
+                </button>
+              </template>
+
+              <template #default>
+                <AppLink :to="{ name: 'channel.browser' }">
+                  <MenuItem>Browse channels</MenuItem>
+                </AppLink>
+                
+                <!-- Create a channel -->
+                <MenuItem @click.prevent="form.modal = true">Create a channel</MenuItem>
+              </template>
+            </Menu>
           </div>
         </div>
 
         <div>
           <!-- ListItem (Active Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300', 'bg-sky-700']">
+          <AppLink 
+            v-for="channel in joinedChannels" :key="channel.id"
+            :to="{ name: 'channels.show', params: { id: channel.id }}" 
+            class="w-full py-1 pl-7 pr-4 flex items-center space-x-2" 
+            active-class="text-white bg-sky-700"
+            inactive-class="text-slate-300 hover:bg-slate-800"
+          >
             <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">general</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">random</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">really-long-channel-name-to-test-padding</span>
-          </button>
-
-          <!-- ListItem (Inactive Channel) -->
-          <button :class="['w-full py-1 pl-7 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
-            <Icon name="hashtag" class="w-4 h-4 flex-shrink-0" />
-            <span class="truncate">whack-dev</span>
-          </button>
+            <span class="truncate">{{ channel.name }}</span>
+          </AppLink>
 
           <!-- ListItem (Add Channels Button) -->
-          <button :class="['w-full py-1 pl-6 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
+          <button @click="form.modal = true" :class="['w-full py-1 pl-6 pr-4 flex items-center space-x-2 text-slate-300 hover:bg-slate-800']">
             <div class="bg-slate-600 p-0.5 rounded">
               <Icon name="plus-sm" class="w-4 h-4 flex-shrink-0" />
             </div>
@@ -99,18 +124,79 @@
         </div>
       </div>
     </div>
+
+    <Modal v-model="form.modal">
+      <template #default="{ close }">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold text-gray-800">Create a channel</h2>
+          <button @click.prevent="close" class="hover:bg-gray-100 text-gray-600 p-2 rounded">
+            <Icon name="x" class="w-5 h-5 flex-shrink-0" />
+          </button>
+        </div>
+
+        <div class="my-8">
+          <p class="text-gray-400">Channels are where your team communicates. They're best when organized around a topic — #marketing, for example</p>
+        </div>
+
+        <!-- <TextInput label="Name" help="..." icon="hashtag" placeholder="..." max-length="80" -->
+        <div>
+          <label for="text-input-1" class="font-bold">Name</label>
+          <div class="flex items-center space-x-2 border border-gray-400 rounded px-3 py-2 mt-2">
+            <Icon name="hashtag" outline class="w-5 h-5 flex-shrink-0 text-gray-500" />
+            <input v-model="form.name" class="focus:outline-none flex-1 text-lg text-gray-600" id="text-input-1" type="text" placeholder="e.g. plan-budget" />
+          </div>
+        </div>
+
+        <div class="mt-8 flex justify-end">
+          <Button @click="createChannel" color="green" :disabled="form.name.length === 0">Create</Button>
+        </div>
+      </template>
+    </Modal>
     
     <router-view />
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useChannels } from '@/composables/channels'
+import Button from '@/components/Common/Button.vue'
+import Modal from '@/components/Common/Modal.vue'
+import Menu from '@/components/Common/Menu.vue'
+import MenuItem from '@/components/Common/MenuItem.vue'
 import Icon from 'vue-heroicon-next'
-import Dropdown from '@/components/Common/Dropdown.vue'
+import Identicon from 'vue-identicon'
+import AppLink from '@/components/Common/AppLink.vue'
+import CreateChannelModal from '@/components/CreateChannelModal.vue'
 
 export default {
   name: 'Application',
-  components: { Icon, Dropdown }
+  components: { Button, Icon, Identicon, Menu, MenuItem, Modal, AppLink, CreateChannelModal },
+
+  setup() {
+    const router = useRouter()
+    const { joinedChannels, create, join } = useChannels()
+
+    const form = reactive({
+      modal: false,
+      name: ''
+    })
+
+    async function createChannel() {
+      const channel = await create(form.name)
+      await join(channel.id)
+
+      form.modal = false
+
+      router.push({ name: 'channels.show', params: { id: channel.id } })
+    }
+
+    return {
+      joinedChannels,
+      createChannel,
+      form,
+    }
+  }
 }
 </script>

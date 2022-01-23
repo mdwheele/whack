@@ -313,8 +313,18 @@ components:
           readOnly: true
         name:
           type: string
+        meta:
+          type: object
+          required:
+            - members
+          properties:
+            members:
+              type: number
+              readOnly: true
+          readOnly: true
       required:
         - name
+        - meta
     Message:
       title: Message
       type: object
