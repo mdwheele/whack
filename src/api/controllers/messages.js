@@ -2,8 +2,20 @@ const Message = require('../models/Message')
 const Channel = require('../models/Channel')
 const { default: validator } = require('validator')
 
+/*
+
+  /api/messages?filter[channel]=:id
+
+*/
+
 exports.index = async (req, res) => {
-  const messages = await Message.filter()
+  const filter = req.query.filter
+
+  const messages = await Message.filter(query => {
+    if (filter.channel) {
+      query.where('channels.rid', filter.channel)
+    }
+  })
 
   res.json(messages.map(message => message.toJSON()))
 }

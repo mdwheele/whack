@@ -241,6 +241,11 @@ paths:
               - desc
           in: query
           name: order
+        - schema:
+            type: object
+          in: query
+          name: filter
+      description: ''
   '/messages/{id}':
     parameters:
       - schema:

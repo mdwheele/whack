@@ -143,7 +143,7 @@ export default {
 
   setup() {
     const { findById, joinedChannels, join } = useChannels()
-    const { send } = useMessages()
+    const { listByChannel, send } = useMessages()
     const route = useRoute()
 
     const channel = ref(null)
@@ -160,14 +160,12 @@ export default {
     watchEffect(async () => {
       if (route.params.id) {
         channel.value = await findById(route.params.id)
-        messages.value = []
+        messages.value = await listByChannel(channel.value.id)
       }
     })
 
     async function sendCurrentMessage() {
       const message = await send(channel.value.id, form.message)
-
-      message.body = window.atob(message.body)
 
       messages.value.push(message)
 

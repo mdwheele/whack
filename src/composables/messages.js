@@ -25,6 +25,8 @@ export function useMessages(url) {
       baseURL: url
     })
 
+    response.data.body = body
+
     return response.data
   }
 
@@ -59,6 +61,19 @@ export function useMessages(url) {
     }))
   }
 
+  async function listByChannel(channelId) {
+    if (!channelId) {
+      return []
+    }
+
+    const response = await axios.get(`/api/messages?filter[channel]=${channelId}`, {}, { baseURL: url })
+
+    return response.data.map(message => ({
+      ...message,
+      body: atob(message.body)
+    }))
+  }
+
   async function del(id) {
     await axios.delete(`/api/messages/${id}`, {}, { baseURL: url })
   }
@@ -68,6 +83,7 @@ export function useMessages(url) {
     update,
     findById,
     listAll,
+    listByChannel,
     del
   }
 }
