@@ -2,7 +2,7 @@
   <slot name="trigger" :open="open" :isOpen="isOpen" />
 
   <TransitionRoot as="template" :show="isOpen" @after-leave="emit('update:modelValue', false)">
-    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="close">
+    <Dialog :initialFocus="initialFocus" as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="close">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-800 bg-opacity-60 transition-opacity" />
@@ -32,6 +32,10 @@ export default {
     modelValue: {
       type: Boolean,
       required: false,
+    }, 
+
+    initialFocus: {
+      required: false
     }
   },
 

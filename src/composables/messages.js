@@ -2,9 +2,14 @@ import axios from '../axios'
 import { isNode } from 'browser-or-node'
 
 // This is only here for the Jest test suite.
+var btoa, atob
+
 if (isNode) {
-  var btoa = require('btoa')
-  var atob = require('atob')
+  btoa = require('btoa')
+  atob = require('atob')
+} else {
+  btoa = window.btoa
+  atob = window.atob
 }
 
 export function useMessages(url) {
@@ -13,9 +18,11 @@ export function useMessages(url) {
     // before creating the message
     const b64body = btoa(body)
 
-    const response = await axios.post(`${url}/api/messages`, {
+    const response = await axios.post(`/api/messages`, {
       channel,
       body: b64body
+    }, {
+      baseURL: url
     })
 
     return response.data
@@ -26,15 +33,17 @@ export function useMessages(url) {
     // before creating the message
     const b64body = btoa(body)
 
-    const response = await axios.put(`${url}/api/messages/${id}`, {
+    const response = await axios.put(`/api/messages/${id}`, {
       body: b64body
+    }, {
+      baseURL: url
     })
 
     return response.data
   }
 
   async function findById(id) {
-    const response = await axios.get(`${url}/api/messages/${id}`)
+    const response = await axios.get(`/api/messages/${id}`, {}, { baseURL: url })
 
     response.data.body = atob(response.data.body)
 
@@ -42,7 +51,7 @@ export function useMessages(url) {
   }
 
   async function listAll() {
-    const response = await axios.get(`${url}/api/messages`)
+    const response = await axios.get(`/api/messages`, {}, { baseURL: url })
 
     return response.data.map(message => ({
       ...message,
@@ -51,7 +60,7 @@ export function useMessages(url) {
   }
 
   async function del(id) {
-    await axios.delete(`${url}/api/messages/${id}`)
+    await axios.delete(`/api/messages/${id}`, {}, { baseURL: url })
   }
 
   return {
