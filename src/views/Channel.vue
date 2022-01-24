@@ -98,7 +98,7 @@
       <!-- Chat Box -->
       <div class="-mt-2 flex flex-col">
         <div class="relative flex-1">
-          <div @input="form.message = $event.target.innerText" contenteditable="true" class="bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto">{{ form.message }}</div>
+          <textarea @keydown.enter.exact="sendCurrentMessage" v-model="form.message" class="resize-none bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto"></textarea>
         </div>
 
         <!-- Toolbar -->
