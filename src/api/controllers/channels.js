@@ -2,7 +2,13 @@ const Channel = require("../models/Channel")
 const User = require("../models/User")
 
 exports.index = async (req, res) => {
-  const channels = await Channel.all()
+  const order = req.query.order
+
+  const channels = await Channel.filter(query => {
+    if (order && order.name) {
+      query.orderBy('name', order.name === 'desc' ? 'desc' : 'asc')
+    }
+  })
 
   res.json(channels.map(channel => channel.toJSON()))
 }
