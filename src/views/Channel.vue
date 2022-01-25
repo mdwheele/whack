@@ -64,7 +64,7 @@
       </button>
     </div>
 
-    <div class="flex-auto h-0 overflow-y-auto">
+    <div ref="chatWindow" class="flex-auto h-0 overflow-y-auto">
       <!-- Channel Banner / Description -->
       <div class="px-6 py-12 flex items-start space-x-3">
         <div class="p-2 bg-slate-200 rounded">
@@ -93,16 +93,14 @@
         </div>
       </div>
     </div>
-
-    <div class="z-10 px-6 h-16" v-if="isMemberOfChannel">
+  
+    <div class="px-6 h-32" v-if="isMemberOfChannel">
       <!-- Chat Box -->
-      <div class="-mt-2 flex flex-col">
-        <div class="relative flex-1">
-          <textarea @keydown.enter.exact="sendCurrentMessage" v-model="form.message" class="resize-none bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto"></textarea>
-        </div>
+      <div>
+        <textarea @keydown.enter.exact="sendCurrentMessage" v-model="form.message" class="resize-none bg-white py-2 px-3 w-full focus:outline-none rounded-t-lg border border-b-0 border-gray-200"></textarea>
 
         <!-- Toolbar -->
-        <div class="flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
+        <div class="-mt-1.5 flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
           <div class="space-x-2">
             <button class="group p-1 rounded hover:bg-gray-100">
               <Icon name="emoji-happy" outline class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
@@ -127,9 +125,10 @@
 </template>
 
 <script>
-import { ref, reactive, computed, watchEffect, onMounted } from 'vue'
+import { ref, reactive, computed, watchEffect, nextTick } from 'vue'
 import { useChannels } from '@/composables/channels'
 import { useMessages } from '@/composables/messages'
+import { useSockets, Events } from '@/composables/sockets'
 import { useRoute } from 'vue-router'
 
 import Icon from 'vue-heroicon-next'
@@ -144,10 +143,26 @@ export default {
   setup() {
     const { findById, joinedChannels, join } = useChannels()
     const { listByChannel, send } = useMessages()
+    const { socket } = useSockets()
     const route = useRoute()
 
+    const chatWindow = ref(null)
     const channel = ref(null)
     const messages = ref([])
+
+    if (socket.listeners(Event.Message).length === 0) {
+      socket.on(Events.Message, message => {
+        messages.value.push(message)
+
+        // This is a little dirty... it'd be nice if we didn't have
+        // to use next tick.
+        nextTick(() => {
+          if (chatWindow.value) {
+            chatWindow.value.scrollTop = chatWindow.value.scrollHeight
+          }
+        })
+      })
+    }
 
     const form = reactive({
       message: ''
@@ -165,9 +180,9 @@ export default {
     })
 
     async function sendCurrentMessage() {
-      const message = await send(channel.value.id, form.message)
+      const outboundMessage = await send(channel.value.id, form.message)
 
-      messages.value.push(message)
+      socket.emit(Events.Message, outboundMessage)
 
       form.message = ''
     }
@@ -179,6 +194,7 @@ export default {
       join,
       sendCurrentMessage,
       messages,
+      chatWindow,
       formatTimeString: date => (new Date(date)).toLocaleTimeString()
     }
   }

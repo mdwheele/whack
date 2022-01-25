@@ -18,6 +18,10 @@ module.exports = {
     proxy: {
       '/api': {
         target: `https://${config.server.hostname}`
+      },
+      '/socket.io': {
+        ws: true,
+        target: `https://${config.server.hostname}`
       }
     }
   }
