@@ -27,7 +27,7 @@ export default {
   props: {
     coverage: {
       type: Number,
-      default: 350
+      default: 150
     }
   },
 
