@@ -15,6 +15,8 @@ exports.index = async (req, res) => {
     if (filter.channel) {
       query.where('channels.rid', filter.channel)
     }
+
+    query.orderBy('messages.id', 'asc')
   })
 
   res.json(messages.map(message => message.toJSON()))
