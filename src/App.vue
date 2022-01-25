@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Application from '@/layouts/Application.vue'
@@ -18,7 +18,6 @@ export default {
 
   setup() {
     const route = useRoute()
-
     const layout = computed(() => route.meta.layout || 'Application')
 
     return {
