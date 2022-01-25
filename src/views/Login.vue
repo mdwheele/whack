@@ -8,7 +8,7 @@
 
       <form class="mt-8 space-y-4" @submit.prevent="showPasswordModal = true">
         <input type="text" v-model="username" placeholder="Username" class="border border-gray-400 px-3 py-2 text-gray-800 w-full rounded text-lg" />
-        <button type="submit" class="w-full bg-purple-900 hover:bg-purple-800 text-white text-center py-2 rounded text-lg text-semibold">Sign In</button>
+        <Button @click="authenticate" full color="purple" size="lg" :disabled="username.length === 0">Sign In</Button>
         <div class="flex items-start space-x-2 bg-gray-100 rounded px-3 py-2">
           <Icon name="sparkles" outline class="mt-1 text-gray-400 w-5 h-5 flex-shrink-0" />
           <p class="text-gray-400 text-sm">Prepare your hearts and minds for the greatest, bestest chat experience you've ever lived through.</p>
@@ -24,17 +24,7 @@
 
           <div class="mt-4 space-y-4">
             <DoodlePassword @finish="e => { canLogin = true; password = e; }" />
-            <button 
-              @click="authenticate" 
-              :disabled="!canLogin"
-              :aria-disabled="!canLogin"
-              class="w-full text-white text-center py-2 rounded text-lg text-semibold"
-              :class="[
-                canLogin ? 'bg-purple-900 hover:bg-purple-800' : 'bg-gray-300 cursor-not-allowed'
-              ]"
-            >
-              Sign In
-            </button>
+            <Button @click="authenticate" full color="purple" size="lg" :disabled="!canLogin">Sign In</Button>
           </div>
         </div>
       </Modal>
@@ -48,12 +38,13 @@ import { useRouter } from 'vue-router'
 import { useAuthentication } from '@/composables/auth'
 import DoodlePassword from '@/components/DoodlePassword.vue'
 import Modal from '@/components/Common/Modal.vue'
+import Button from '@/components/Common/Button.vue'
 import Icon from 'vue-heroicon-next'
 
 export default {
   name: 'Login',
 
-  components: { DoodlePassword, Icon, Modal },
+  components: { Button, DoodlePassword, Icon, Modal },
 
   setup() {
     const router = useRouter()

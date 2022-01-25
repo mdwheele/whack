@@ -82,7 +82,15 @@ paths:
       description: ''
       security:
         - BearerAuth: []
-      parameters: []
+      parameters:
+        - schema:
+            type: object
+          in: query
+          name: order
+        - schema:
+            type: object
+          in: query
+          name: filter
     post:
       summary: Create a new channel
       tags:
@@ -196,6 +204,11 @@ paths:
       operationId: me.channels
       security:
         - BearerAuth: []
+      parameters:
+        - schema:
+            type: object
+          in: query
+          name: order
     parameters: []
   /messages:
     post:
@@ -241,6 +254,11 @@ paths:
               - desc
           in: query
           name: order
+        - schema:
+            type: object
+          in: query
+          name: filter
+      description: ''
   '/messages/{id}':
     parameters:
       - schema:

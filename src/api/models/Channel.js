@@ -115,6 +115,7 @@ class Channel {
           .whereRaw('?? = ??', ['channels.id', 'user_channel_assoc.channel_id'])
           .as('members_count')
       )
+      .whereNull('archived_at')
       .options({ nestTables: true })
 
     await callback(query)

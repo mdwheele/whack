@@ -125,7 +125,7 @@
       </div>
     </div>
 
-    <Modal v-model="form.modal">
+    <Modal v-model="form.modal" :initialFocus="channelNameRef">
       <template #default="{ close }">
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-gray-800">Create a channel</h2>
@@ -143,7 +143,7 @@
           <label for="text-input-1" class="font-bold">Name</label>
           <div class="flex items-center space-x-2 border border-gray-400 rounded px-3 py-2 mt-2">
             <Icon name="hashtag" outline class="w-5 h-5 flex-shrink-0 text-gray-500" />
-            <input v-model="form.name" class="focus:outline-none flex-1 text-lg text-gray-600" id="text-input-1" type="text" placeholder="e.g. plan-budget" />
+            <input ref="channelNameRef" v-model="form.name" class="focus:outline-none flex-1 text-lg text-gray-600" id="text-input-1" type="text" placeholder="e.g. plan-budget" />
           </div>
         </div>
 
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChannels } from '@/composables/channels'
 import Button from '@/components/Common/Button.vue'
@@ -183,6 +183,8 @@ export default {
       name: ''
     })
 
+    const channelNameRef = ref(null)
+
     async function createChannel() {
       const channel = await create(form.name)
       await join(channel.id)
@@ -196,6 +198,7 @@ export default {
       joinedChannels,
       createChannel,
       form,
+      channelNameRef,
     }
   }
 }

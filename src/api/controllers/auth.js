@@ -8,6 +8,10 @@ const { compare } = require('../utils/image')
 exports.login = async (req, res) => {
   const { name: username, pass: password } = auth(req)
 
+  if (username.length === 0) {
+    throw { status: 400, message: 'Usernames must be at least 1 character'}
+  }
+
   if (!password) {
     throw { status: 401, message: 'Invalid password' }
   }

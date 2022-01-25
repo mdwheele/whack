@@ -78,18 +78,18 @@
       </div>  
 
       <!-- Messages -->
-      <div v-for="i in 20" :key="i" class="py-2 px-6 flex items-start space-x-2 hover:bg-slate-50">
+      <div v-for="message in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-2 hover:bg-slate-50">
         <div class="bg-white rounded p-2">
           <div class="bg-blue-500 rounded-full w-4 h-4 p-1" />
         </div>
 
         <div>
           <div class="space-x-2">
-            <span class="font-bold text-gray-800">mdwheele</span>
-            <span class="text-gray-400 text-sm">12:05 AM</span>
+            <span class="font-bold text-gray-800">{{ message.author.username }}</span>
+            <span class="text-gray-400 text-sm">{{ formatTimeString(message.created_at) }}</span>
           </div>
 
-          <p class="text-gray-600">👋 &nbsp; Hi everyone!</p>
+          <p class="text-gray-600">{{ message.body }}</p>
         </div>
       </div>
     </div>
@@ -98,11 +98,11 @@
       <!-- Chat Box -->
       <div class="-mt-2 flex flex-col">
         <div class="relative flex-1">
-          <div contenteditable="true" class="bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto"></div>
+          <textarea @keydown.enter.exact="sendCurrentMessage" v-model="form.message" class="resize-none bg-white py-2 px-3 w-full focus:outline-none absolute bottom-0 rounded-t-lg border border-b-0 border-gray-200 max-h-48 overflow-y-auto"></textarea>
         </div>
 
         <!-- Toolbar -->
-        <div class="flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 py-2 px-3">
+        <div class="flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
           <div class="space-x-2">
             <button class="group p-1 rounded hover:bg-gray-100">
               <Icon name="emoji-happy" outline class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
@@ -112,9 +112,7 @@
             </button>
           </div>
 
-          <button>
-            <Icon name="paper-airplane" class="w-5 h-5 rotate-90 flex-shrink-0 text-gray-400" />
-          </button>
+          <Button @click="sendCurrentMessage" icon="paper-airplane" icon-classes="rotate-90" color="green" :disabled="form.message.length === 0" />
         </div>
       </div>
     </div>
@@ -129,24 +127,31 @@
 </template>
 
 <script>
-import { ref, computed, watchEffect, onMounted } from 'vue'
+import { ref, reactive, computed, watchEffect, onMounted } from 'vue'
 import { useChannels } from '@/composables/channels'
+import { useMessages } from '@/composables/messages'
 import { useRoute } from 'vue-router'
 
 import Icon from 'vue-heroicon-next'
 import Modal from '@/components/Common/Modal.vue'
+import Button from '@/components/Common/Button.vue'
 
 export default {
   name: 'Channel',
 
-  components: { Icon, Modal },
+  components: { Button, Icon, Modal },
 
   setup() {
     const { findById, joinedChannels, join } = useChannels()
+    const { listByChannel, send } = useMessages()
     const route = useRoute()
 
     const channel = ref(null)
-    const message = ref('')
+    const messages = ref([])
+
+    const form = reactive({
+      message: ''
+    })
 
     const isMemberOfChannel = computed(() => {
       return joinedChannels.value.some(joinedChannel => channel.value.id === joinedChannel.id)
@@ -155,14 +160,26 @@ export default {
     watchEffect(async () => {
       if (route.params.id) {
         channel.value = await findById(route.params.id)
+        messages.value = await listByChannel(channel.value.id)
       }
     })
 
+    async function sendCurrentMessage() {
+      const message = await send(channel.value.id, form.message)
+
+      messages.value.push(message)
+
+      form.message = ''
+    }
+
     return { 
+      form, 
       isMemberOfChannel,
-      message, 
       channel,
-      join
+      join,
+      sendCurrentMessage,
+      messages,
+      formatTimeString: date => (new Date(date)).toLocaleTimeString()
     }
   }
 }
