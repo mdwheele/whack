@@ -25,18 +25,6 @@
           <div class="mt-4 space-y-4">
             <DoodlePassword @finish="e => { canLogin = true; password = e; }" />
             <Button @click="authenticate" full color="purple" size="lg" :disabled="!canLogin">Sign In</Button>
-
-            <button 
-              @click="authenticate" 
-              :disabled="!canLogin"
-              :aria-disabled="!canLogin"
-              class="w-full text-white text-center py-2 rounded text-lg text-semibold"
-              :class="[
-                canLogin ? 'bg-purple-900 hover:bg-purple-800' : 'bg-gray-300 cursor-not-allowed'
-              ]"
-            >
-              Sign In
-            </button>
           </div>
         </div>
       </Modal>
