@@ -6,7 +6,7 @@ const https = require('https')
 const express = require('express')
 const app = require('../src/api/app')
 const config = require('../src/api/config')
-const { Server } = require('socket.io')
+const { attachWebSocketServer } = require('../src/api/socket')
 
 // Create an Express app to forward 80 to 443.
 const httpApp = express()
@@ -29,31 +29,4 @@ const server = https.createServer({
 server.listen(config.server.port)
 console.log(`Server listening on ${config.server.port}.`)
 
-const io = new Server(server, {
-  cors: {
-    origin: "https://whack.chat:8080"
-  }
-})
-
-const Events = {
-  Connection: 'connection',
-  Message: 'message',
-  Disconnect: 'disconnect',
-  Disconnecting: 'disconnecting',
-}
-
-io.on(Events.Connection, socket => {
-  socket.on(Events.Message, message => {
-    // TODO: Limit this to appropriate rooms based on where the 
-    //       message came from.
-    io.emit(Events.Message, message)
-  })
-
-  socket.on(Events.Disconnecting, () => {
-    console.log(`${socket.id} is disconnecting...`)
-  })
-
-  socket.on(Events.Disconnect, () => {
-    console.log(`${socket.id} has disconnected...`)
-  })
-})
+attachWebSocketServer(server)
