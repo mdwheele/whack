@@ -11,7 +11,6 @@ export const Events = {
 
 export function useSockets() {
   if (!socket) {
-    console.log('Connecting...')
     socket = io()
   }
 

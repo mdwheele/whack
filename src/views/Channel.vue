@@ -152,6 +152,10 @@ export default {
 
     if (socket.listeners(Event.Message).length === 0) {
       socket.on(Events.Message, message => {
+        if (message.channel !== channel.value.id) {
+          return
+        }
+
         messages.value.push(message)
 
         // This is a little dirty... it'd be nice if we didn't have
@@ -181,8 +185,6 @@ export default {
 
     async function sendCurrentMessage() {
       const outboundMessage = await send(channel.value.id, form.message)
-
-      socket.emit(Events.Message, outboundMessage)
 
       form.message = ''
     }

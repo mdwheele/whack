@@ -1,12 +1,8 @@
 const Message = require('../models/Message')
 const Channel = require('../models/Channel')
 const { default: validator } = require('validator')
-
-/*
-
-  /api/messages?filter[channel]=:id
-
-*/
+const { io, Events } = require('../socket')
+const atob = require('atob')
 
 exports.index = async (req, res) => {
   const filter = req.query.filter
@@ -40,6 +36,8 @@ exports.create = async (req, res) => {
     channelId: channel.id, 
     body: req.body.body
   })
+
+  io().to(channel.rid).emit(Events.Message, { ...message.toJSON(), body: atob(message.body) })
 
   res.json(message.toJSON())
 }
