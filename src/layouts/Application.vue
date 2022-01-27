@@ -141,7 +141,7 @@
         <TextInput v-model="form.name" icon="hashtag" label="Name" help="Remember! Keep it interesting." placeholder="e.g. whack-dev" max-length="80" />
 
         <div class="mt-8 flex justify-end">
-          <Button @click="createChannel" color="green" :disabled="form.name.length === 0">Create</Button>
+          <Button @click="createChannel" color="green" :disabled="form.name.length === 0" :loading="loading">Create</Button>
         </div>
       </template>
     </Modal>
@@ -169,7 +169,7 @@ export default {
 
   setup() {
     const router = useRouter()
-    const { joinedChannels, create, join } = useChannels()
+    const { loading, joinedChannels, create, join } = useChannels()
 
     const form = reactive({
       modal: false,
@@ -188,6 +188,7 @@ export default {
     }
 
     return {
+      loading,
       joinedChannels,
       createChannel,
       form,

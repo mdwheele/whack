@@ -9,18 +9,28 @@ const sortedChannels = computed(() => {
 })
 
 export function useChannels(url) {
+  const loading = ref(false)
+
   onMounted(async () => {
     joinedChannels.value = await listJoinedChannels()
   })
 
   async function create(name) {
-    const response = await axios.post(`/api/channels`, {
-      name
-    }, {
-      baseURL: url
-    })
+    try {
+      loading.value = true
 
-    return response.data
+      const response = await axios.post(`/api/channels`, {
+        name
+      }, {
+        baseURL: url
+      })
+  
+      return response.data
+    } catch (error) {
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
   }
 
   async function findById(id) {
@@ -79,6 +89,7 @@ export function useChannels(url) {
     join,
     leave,
     archive,
-    joinedChannels: sortedChannels
+    joinedChannels: sortedChannels,
+    loading,
   }
 }
