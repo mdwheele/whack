@@ -10,7 +10,7 @@
     :aria-disabled="disabled"
   >
     <Icon v-if="icon" :name="icon" :class="['w-5 h-5 flex-shrink-0', iconClasses]" />
-    <div>
+    <div v-if="$slots.default">
       <slot/>
     </div>
     <Icon 
