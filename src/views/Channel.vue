@@ -83,13 +83,13 @@
           <div class="bg-blue-500 rounded-full w-4 h-4 p-1" />
         </div>
 
-        <div>
+        <div class="flex-1">
           <div class="space-x-2">
             <span class="font-bold text-gray-800">{{ message.author.username }}</span>
             <span class="text-gray-400 text-sm">{{ formatTimeString(message.created_at) }}</span>
           </div>
 
-          <p class="text-gray-600">{{ message.body }}</p>
+          <div class="prose max-w-none" v-html="markdown(message.body)" />
         </div>
       </div>
     </div>
@@ -130,6 +130,7 @@ import { useChannels } from '@/composables/channels'
 import { useMessages } from '@/composables/messages'
 import { useSockets, Events } from '@/composables/sockets'
 import { useRoute } from 'vue-router'
+import MarkdownIt from 'markdown-it'
 
 import Icon from 'vue-heroicon-next'
 import Modal from '@/components/Common/Modal.vue'
@@ -189,6 +190,16 @@ export default {
       form.message = ''
     }
 
+    const md = MarkdownIt('commonmark', {
+      html: true,
+      linkify: true,
+      typographer: true
+    })
+
+    function markdown(body) {
+      return md.render(body)
+    }
+
     return { 
       form, 
       isMemberOfChannel,
@@ -197,7 +208,8 @@ export default {
       sendCurrentMessage,
       messages,
       chatWindow,
-      formatTimeString: date => (new Date(date)).toLocaleTimeString()
+      formatTimeString: date => (new Date(date)).toLocaleTimeString(),
+      markdown
     }
   }
 }
