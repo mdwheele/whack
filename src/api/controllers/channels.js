@@ -1,5 +1,6 @@
 const Channel = require("../models/Channel")
 const User = require("../models/User")
+const { io, Events } = require('../socket')
 
 exports.index = async (req, res) => {
   const order = req.query.order
@@ -45,6 +46,10 @@ exports.join = async (req, res) => {
 
   await user.joinChannel(req.params.id)
 
+  const socket = Array.from(io().sockets.sockets.values()).find(socket => socket.locals.uid === res.locals.uid)
+
+  socket.join(req.params.id)
+
   res.send()
 }
 
@@ -52,6 +57,10 @@ exports.leave = async (req, res) => {
   const user = await User.findById(res.locals.uid)
 
   await user.leaveChannel(req.params.id)
+
+  const socket = Array.from(io().sockets.sockets.values()).find(socket => socket.locals.uid === res.locals.uid)
+
+  socket.leave(req.params.id)
 
   res.send()
 }
