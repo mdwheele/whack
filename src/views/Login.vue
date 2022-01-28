@@ -24,7 +24,7 @@
 
           <div class="mt-4 space-y-4">
             <DoodlePassword @finish="e => { canLogin = true; password = e; }" />
-            <Button @click="authenticate" full color="purple" size="lg" :disabled="!canLogin">Sign In</Button>
+            <Button @click="authenticate" full color="purple" size="lg" :disabled="!canLogin" :loading="loading">Sign In</Button>
           </div>
         </div>
       </Modal>
@@ -48,7 +48,7 @@ export default {
 
   setup() {
     const router = useRouter()
-    const { login, token } = useAuthentication()
+    const { login, token, loading } = useAuthentication()
     const username = ref('')
     const password = ref('')
     const showPasswordModal = ref(false)
@@ -71,7 +71,8 @@ export default {
       password,
       authenticate,
       showPasswordModal,
-      canLogin
+      canLogin,
+      loading
     }
   }
 }

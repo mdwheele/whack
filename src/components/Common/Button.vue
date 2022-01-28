@@ -6,11 +6,18 @@
       colorClasses,
       sizeClasses
     ]"
-    :disabled="disabled"
-    :aria-disabled="disabled"
+    :disabled="disabled || loading"
+    :aria-disabled="disabled || loading"
   >
-    <Icon v-if="icon" :name="icon" :class="['w-5 h-5 flex-shrink-0', iconClasses]" />
-    <slot/>
+    <Icon v-if="icon && !loading" :name="icon" :class="['w-5 h-5 flex-shrink-0', iconClasses]" />
+    <div v-if="!loading && $slots.default">
+      <slot/>
+    </div>
+    <Icon 
+      v-if="loading" 
+      name="refresh" 
+      :class="loaderClasses" 
+    />
   </button>
 </template>
 
@@ -48,7 +55,9 @@ export default {
 
     full: Boolean,
 
-    disabled: Boolean
+    disabled: Boolean,
+
+    loading: Boolean,
   },
 
   setup(props) {
@@ -58,9 +67,9 @@ export default {
       } 
 
       return {
-        green: 'border-green-900 bg-green-900 hover:bg-green-800 text-white',
-        purple: 'border-purple-900 bg-purple-900 hover:bg-purple-800 text-white',
-        white: 'border-gray-400 bg-white text-gray-800',
+        green: 'border-green-800 bg-green-800 hover:bg-green-700 active:bg-green-800 text-white',
+        purple: 'border-purple-800 bg-purple-800 hover:bg-purple-700 active:bg-purple-800 text-white',
+        white: 'border-gray-400 bg-white text-gray-700 hover:bg-gray-100 active:bg-white',
       }[props.color]
     })
 
@@ -71,9 +80,24 @@ export default {
       }[props.size]
     })
 
+    const loaderClasses = computed(() => {
+      const classes = ['w-5 h-5 flex-shrink-0 animate-spin']
+
+      if (!props.disabled) {
+        classes.push(props.color === 'white' ? 'text-gray-400' : 'text-white')
+      }
+
+      if (props.loading) {
+        classes.push('my-1')
+      }
+
+      return classes.join(' ')
+    })
+
     return {
       colorClasses,
       sizeClasses,
+      loaderClasses,
     }
   }
 }

@@ -138,17 +138,10 @@
           <p class="text-gray-400">Channels are where your team communicates. They're best when organized around a topic — #marketing, for example</p>
         </div>
 
-        <!-- <TextInput label="Name" help="..." icon="hashtag" placeholder="..." max-length="80" -->
-        <div>
-          <label for="text-input-1" class="font-bold">Name</label>
-          <div class="flex items-center space-x-2 border border-gray-400 rounded px-3 py-2 mt-2">
-            <Icon name="hashtag" outline class="w-5 h-5 flex-shrink-0 text-gray-500" />
-            <input ref="channelNameRef" v-model="form.name" class="focus:outline-none flex-1 text-lg text-gray-600" id="text-input-1" type="text" placeholder="e.g. plan-budget" />
-          </div>
-        </div>
+        <TextInput v-model="form.name" icon="hashtag" label="Name" help="Remember! Keep it interesting." placeholder="e.g. whack-dev" max-length="80" />
 
         <div class="mt-8 flex justify-end">
-          <Button @click="createChannel" color="green" :disabled="form.name.length === 0">Create</Button>
+          <Button @click="createChannel" color="green" :disabled="form.name.length === 0" :loading="loading">Create</Button>
         </div>
       </template>
     </Modal>
@@ -168,15 +161,17 @@ import MenuItem from '@/components/Common/MenuItem.vue'
 import Icon from 'vue-heroicon-next'
 import Identicon from 'vue-identicon'
 import AppLink from '@/components/Common/AppLink.vue'
-import CreateChannelModal from '@/components/CreateChannelModal.vue'
+import TextInput from '@/components/Common/Form/TextInput.vue'
+import { useSockets } from '@/composables/sockets'
 
 export default {
   name: 'Application',
-  components: { Button, Icon, Identicon, Menu, MenuItem, Modal, AppLink, CreateChannelModal },
+  components: { Button, Icon, Identicon, Menu, MenuItem, Modal, AppLink, TextInput },
 
   setup() {
     const router = useRouter()
-    const { joinedChannels, create, join } = useChannels()
+    const { isConnected } = useSockets()
+    const { loading, joinedChannels, create, join } = useChannels()
 
     const form = reactive({
       modal: false,
@@ -195,10 +190,12 @@ export default {
     }
 
     return {
+      loading,
       joinedChannels,
       createChannel,
       form,
       channelNameRef,
+      isConnected,
     }
   }
 }

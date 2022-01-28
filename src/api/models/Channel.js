@@ -31,7 +31,7 @@ class Channel {
     const [channel] = await query
 
     if (channel) {
-      throw new Error(`Channel with name ${name} already exists.`)
+      throw { status: 400, message: `Channel with name ${name} already exists.` }
     }
 
     const rid = nanoid()
