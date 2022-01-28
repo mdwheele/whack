@@ -26,7 +26,7 @@ const server = https.createServer({
   minVersion: 'TLSv1.2'
 }, app)
 
+attachWebSocketServer(server)
+
 server.listen(config.server.port)
 console.log(`Server listening on ${config.server.port}.`)
-
-attachWebSocketServer(server)
