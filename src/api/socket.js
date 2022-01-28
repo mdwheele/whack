@@ -8,8 +8,9 @@ let io = null
 
 function attachWebSocketServer(server) {
   io = new Server(server, {
+    transports: ['websocket'],
     cors: {
-      origin: "https://whack.chat:8080"
+      origin: '*:*'
     }
   })
 

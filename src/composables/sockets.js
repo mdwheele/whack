@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { io } from 'socket.io-client'
 
 var socket = null
@@ -10,11 +11,20 @@ export const Events = {
 }
 
 export function useSockets() {
+  const isConnected = ref(false)
+
   if (!socket) {
-    socket = io()
+    socket = io({
+      transports: ['websocket']
+    })
+
+    socket.on('connect', () => {
+      isConnected.value = true
+    })
   }
 
   return {
-    socket
+    socket,
+    isConnected
   }
 }
