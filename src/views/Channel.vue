@@ -78,10 +78,8 @@
       </div>  
 
       <!-- Messages -->
-      <div v-for="message in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-2 hover:bg-slate-50">
-        <div class="bg-white rounded p-2">
-          <div class="bg-blue-500 rounded-full w-4 h-4 p-1" />
-        </div>
+      <div v-for="message in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50">
+        <Identicon :seed="message.author.username" class="mt-1 w-10 h-10 rounded" />
 
         <div class="flex-1">
           <div class="space-x-2">
@@ -133,13 +131,14 @@ import { useRoute } from 'vue-router'
 import MarkdownIt from 'markdown-it'
 
 import Icon from 'vue-heroicon-next'
+import Identicon from 'vue-identicon'
 import Modal from '@/components/Common/Modal.vue'
 import Button from '@/components/Common/Button.vue'
 
 export default {
   name: 'Channel',
 
-  components: { Button, Icon, Modal },
+  components: { Button, Icon, Identicon, Modal },
 
   setup() {
     const { findById, joinedChannels, join } = useChannels()
