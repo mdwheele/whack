@@ -6,11 +6,11 @@
       colorClasses,
       sizeClasses
     ]"
-    :disabled="disabled"
-    :aria-disabled="disabled"
+    :disabled="disabled || loading"
+    :aria-disabled="disabled || loading"
   >
-    <Icon v-if="icon" :name="icon" :class="['w-5 h-5 flex-shrink-0', iconClasses]" />
-    <div v-if="$slots.default">
+    <Icon v-if="icon && !loading" :name="icon" :class="['w-5 h-5 flex-shrink-0', iconClasses]" />
+    <div v-if="!loading && $slots.default">
       <slot/>
     </div>
     <Icon 
@@ -85,6 +85,10 @@ export default {
 
       if (!props.disabled) {
         classes.push(props.color === 'white' ? 'text-gray-400' : 'text-white')
+      }
+
+      if (props.loading) {
+        classes.push('my-1')
       }
 
       return classes.join(' ')
