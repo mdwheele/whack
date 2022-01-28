@@ -162,6 +162,7 @@ import Icon from 'vue-heroicon-next'
 import Identicon from 'vue-identicon'
 import AppLink from '@/components/Common/AppLink.vue'
 import TextInput from '@/components/Common/Form/TextInput.vue'
+import { useSockets } from '@/composables/sockets'
 
 export default {
   name: 'Application',
@@ -169,6 +170,7 @@ export default {
 
   setup() {
     const router = useRouter()
+    const { isConnected } = useSockets()
     const { loading, joinedChannels, create, join } = useChannels()
 
     const form = reactive({
@@ -193,6 +195,7 @@ export default {
       createChannel,
       form,
       channelNameRef,
+      isConnected,
     }
   }
 }
