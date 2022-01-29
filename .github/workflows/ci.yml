@@ -10,6 +10,18 @@ jobs:
     - name: Start Services
       run: docker-compose -f "docker-compose.yml" up -d --build
 
+    - name: Create Database
+      run: docker-compose exec -T db mysql -h localhost -u root -p whack -e 'create database whack_test'
+
+    - name: Run Migrations and Seeds
+      run: |
+        npm run db:migrate
+
+    - name: Create Paseto Keys
+      run: |
+        echo $PASETO_PRIVATE_KEY >> var/paseto/key
+        echo $PASETO_PUBLIC_KEY >> var/paseto/key.pub
+
     - name: Install Node 16.x
       uses: actions/setup-node@v1
       with:
