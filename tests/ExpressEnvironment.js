@@ -14,7 +14,7 @@ class ExpressEnvironment extends NodeEnvironment {
     await super.setup()
 
     // Create test database...
-    await knex.raw(`DROP DATABASE ${config.mysql.test_database}`)
+    await knex.raw(`DROP DATABASE IF EXISTS ${config.mysql.test_database}`)
     await knex.raw(`CREATE DATABASE ${config.mysql.test_database}`)
     await knex.raw(`USE ${config.mysql.test_database}`)
 

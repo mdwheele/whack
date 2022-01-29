@@ -25,12 +25,17 @@ jobs:
         echo "Current environment is..."
         env
 
-    - name: Create Paseto Keys
+    - name: Drop in our Paseto keys and SSL certificates
+      env:
+        PASETO_PRIVATE_KEY: ${{ secrets.PASETO_PRIVATE_KEY }}
+        PASETO_PUBLIC_KEY: ${{ secrets.PASETO_PUBLIC_KEY }}
+        SSL_CERTIFICATE: ${{ secrets.SSL_CERTIFICATE }}
+        SSL_KEY: ${{ secrets.SSL_KEY }}
       run: |
         echo $PASETO_PRIVATE_KEY >> var/paseto/key
         echo $PASETO_PUBLIC_KEY >> var/paseto/key.pub
-        echo "Contents of var/paseto..."
-        ls var/paseto
+        echo $SSL_CERTIFICATE >> var/ssl/whack_chat.crt
+        echo $SSL_KEY >> var/ssl/whack_chat.key
 
     - name: Install Node 16.x
       uses: actions/setup-node@v1
@@ -39,14 +44,13 @@ jobs:
 
     - name: Install Node Dependencies
       run: npm ci
-  
-    - name: Run Migrations and Seeds
-      env: 
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      run: |
-        node_modules/.bin/knex migrate:latest
 
     - name: Run Test Suite
+      env: 
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+        PASETO_PRIVATE_KEY: var/paseto/key
+        PASETO_PUBLIC_KEY: var/paseto/key.pub
       run: npm test
 
     - name: Stop Services
