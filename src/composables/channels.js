@@ -34,7 +34,7 @@ export function useChannels(url) {
   }
 
   async function findById(id) {
-    const response = await axios.get(`/api/channels/${id}`, {}, {
+    const response = await axios.get(`/api/channels/${id}`, {
       baseURL: url
     })
 
@@ -42,7 +42,7 @@ export function useChannels(url) {
   }
 
   async function listAll() {
-    const response = await axios.get(`/api/channels`, {}, {
+    const response = await axios.get(`/api/channels`, {
       baseURL: url
     })
 
@@ -50,8 +50,8 @@ export function useChannels(url) {
   }
 
   async function listJoinedChannels() {
-    const response = await axios.get(`/api/me/channels`, {}, {
-      baseURL: url
+    const response = await axios.get(`/api/me/channels`, {
+      baseURL: url,
     })
 
     return response.data
@@ -74,7 +74,7 @@ export function useChannels(url) {
   }
 
   async function archive(id) {
-    await axios.delete(`/api/channels/${id}`, {}, {
+    await axios.delete(`/api/channels/${id}`, {
       baseURL: url
     })
 

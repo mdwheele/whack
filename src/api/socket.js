@@ -35,6 +35,8 @@ function attachWebSocketServer(server) {
       channels.forEach(channel => {
         socket.join(channel.rid)
       })
+
+      next()
     } catch (error) {
       next(new Error('Unable to authenticate web-socket connection'))
     }

@@ -9,15 +9,15 @@ const config = require('../src/api/config')
 const { attachWebSocketServer } = require('../src/api/socket')
 
 // Create an Express app to forward 80 to 443.
-const httpApp = express()
+// const httpApp = express()
 
-httpApp.get('*', (req, res) => {
-  res.redirect(`https://${config.server.hostname}:${config.server.port}`)
-})
+// httpApp.get('*', (req, res) => {
+//   res.redirect(`https://${config.server.hostname}:${config.server.port}`)
+// })
 
-const httpServer = http.createServer(httpApp)
-httpServer.listen(80)
-console.log(`Redirecting HTTP traffic on 80 to ${config.server.port}.`)
+// const httpServer = http.createServer(httpApp)
+// httpServer.listen(80)
+// console.log(`Redirecting HTTP traffic on 80 to ${config.server.port}.`)
 
 // Create HTTPS web server
 const server = https.createServer({

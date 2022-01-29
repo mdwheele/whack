@@ -8,7 +8,7 @@ exports.index = async (req, res) => {
   const filter = req.query.filter
 
   const messages = await Message.filter(query => {
-    if (filter.channel) {
+    if (filter && filter.channel) {
       query.where('channels.rid', filter.channel)
     }
 

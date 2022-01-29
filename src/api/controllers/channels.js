@@ -48,7 +48,9 @@ exports.join = async (req, res) => {
 
   const socket = Array.from(io().sockets.sockets.values()).find(socket => socket.locals.uid === res.locals.uid)
 
-  socket.join(req.params.id)
+  if (socket) {
+    socket.join(req.params.id)
+  }
 
   res.send()
 }
@@ -60,7 +62,9 @@ exports.leave = async (req, res) => {
 
   const socket = Array.from(io().sockets.sockets.values()).find(socket => socket.locals.uid === res.locals.uid)
 
-  socket.leave(req.params.id)
+  if (socket) {
+    socket.leave(req.params.id)
+  }
 
   res.send()
 }
