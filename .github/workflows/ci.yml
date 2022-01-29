@@ -16,7 +16,7 @@ jobs:
         time: '10s'
 
     - name: Create Database
-      run: docker-compose exec -T db mysql -u root -p whack -e 'create database whack_test'
+      run: docker-compose exec -T db mysql -h 127.0.0.1 -uroot -pwhack -e 'create database whack_test'
 
     - name: Run Migrations and Seeds
       run: |
