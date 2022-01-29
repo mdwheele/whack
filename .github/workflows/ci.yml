@@ -10,22 +10,23 @@ jobs:
     - name: Start Services
       run: docker-compose -f "docker-compose.yml" up -d --build
     
-    - name: Wait / Sleep
-      uses: jakejarvis/wait-action@v0.1.0
-      with:
-        time: '10s'
+    - name: Sleep for 10 seconds
+      run: sleep 10s
+      shell: bash
 
     - name: Create Database
       run: docker-compose exec -T db mysql -h 127.0.0.1 -uroot -pwhack -e 'create database whack_test'
 
-    - name: Run Migrations and Seeds
+    - name: Debug
       run: |
-        npm run db:migrate
+        ls .
 
     - name: Create Paseto Keys
       run: |
         echo $PASETO_PRIVATE_KEY >> var/paseto/key
         echo $PASETO_PUBLIC_KEY >> var/paseto/key.pub
+        echo "Contents of var/paseto..."
+        ls var/paseto
 
     - name: Install Node 16.x
       uses: actions/setup-node@v1
@@ -34,6 +35,10 @@ jobs:
 
     - name: Install Node Dependencies
       run: npm ci
+  
+    - name: Run Migrations and Seeds
+      run: |
+        node_modules/.bin/knex migrate:latest
 
     - name: Run Test Suite
       run: npm test
