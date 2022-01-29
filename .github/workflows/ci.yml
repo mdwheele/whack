@@ -3,9 +3,24 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - name: Install modules
+
+    - name: Start Services
+      run: docker-compose -f "docker-compose.yml" up -d --build
+
+    - name: Install Node 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+
+    - name: Install Node Dependencies
       run: npm ci
-    - name: Run tests
+
+    - name: Run Test Suite
       run: npm test
+
+    - name: Stop Services
+      if: always()
+      run: docker-compose -f "docker-compose.yml" down
