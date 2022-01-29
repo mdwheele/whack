@@ -1,7 +1,7 @@
 name: CI
 on: push
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,9 +17,13 @@ jobs:
     - name: Create Database
       run: docker-compose exec -T db mysql -h 127.0.0.1 -uroot -pwhack -e 'create database whack_test'
 
-    - name: Debug
+    - name: Environment
       run: |
+        echo "Current directory structure is..."
         ls .
+        echo
+        echo "Current environment is..."
+        env
 
     - name: Create Paseto Keys
       run: |
@@ -37,6 +41,8 @@ jobs:
       run: npm ci
   
     - name: Run Migrations and Seeds
+      env: 
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       run: |
         node_modules/.bin/knex migrate:latest
 
