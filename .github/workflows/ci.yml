@@ -32,8 +32,8 @@ jobs:
         SSL_CERTIFICATE: ${{ secrets.SSL_CERTIFICATE }}
         SSL_KEY: ${{ secrets.SSL_KEY }}
       run: |
-        echo $PASETO_PRIVATE_KEY >> var/paseto/key
-        echo $PASETO_PUBLIC_KEY >> var/paseto/key.pub
+        echo $PASETO_PRIVATE_KEY | base64 --decode >> var/paseto/key
+        echo $PASETO_PUBLIC_KEY | base64 --decode >> var/paseto/key.pub
         echo $SSL_CERTIFICATE >> var/ssl/whack_chat.crt
         echo $SSL_KEY >> var/ssl/whack_chat.key
 
