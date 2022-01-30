@@ -1,11 +1,61 @@
 name: CI
 on: push
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - name: Install modules
+
+    - name: Start Services
+      run: docker-compose -f "docker-compose.yml" up -d --build
+    
+    - name: Sleep for 10 seconds
+      run: sleep 10s
+      shell: bash
+
+    - name: Create Database
+      run: docker-compose exec -T db mysql -h 127.0.0.1 -uroot -pwhack -e 'create database whack_test'
+
+    - name: Environment
+      run: |
+        echo "Current directory structure is..."
+        ls .
+        echo
+        echo "Current environment is..."
+        env
+
+    - name: Drop in our Paseto keys and SSL certificates
+      env:
+        PASETO_PRIVATE_KEY: ${{ secrets.PASETO_PRIVATE_KEY }}
+        PASETO_PUBLIC_KEY: ${{ secrets.PASETO_PUBLIC_KEY }}
+        SSL_CERTIFICATE: ${{ secrets.SSL_CERTIFICATE }}
+        SSL_KEY: ${{ secrets.SSL_KEY }}
+      run: |
+        echo $PASETO_PRIVATE_KEY | base64 --decode >> var/paseto/key
+        echo $PASETO_PUBLIC_KEY | base64 --decode >> var/paseto/key.pub
+        echo $SSL_CERTIFICATE | base64 --decode >> var/ssl/whack_chat.crt
+        echo $SSL_KEY | base64 --decode >> var/ssl/whack_chat.key
+
+    - name: Install Node 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+
+    - name: Install Node Dependencies
       run: npm ci
-    - name: Run tests
+
+    - name: Run Test Suite
+      env:
+        NODE_TLS_REJECT_UNAUTHORIZED: 0 
+        SERVER_HOSTNAME: 127.0.0.1
+        MYSQL_HOST: 127.0.0.1
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+        PASETO_PRIVATE_KEY: var/paseto/key
+        PASETO_PUBLIC_KEY: var/paseto/key.pub
       run: npm test
+
+    - name: Stop Services
+      if: always()
+      run: docker-compose -f "docker-compose.yml" down

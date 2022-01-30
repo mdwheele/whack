@@ -5,11 +5,13 @@
 import { useAuthentication } from './auth'
 import { useChannels } from './channels'
 
+const DATA_URI_PASSWORD = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
 test('channel feature test', async () => {
   const { login } = useAuthentication(global.address)
 
   // User logs into Whack...
-  await login('whack', 'whack')
+  await login('whack', DATA_URI_PASSWORD)
 
   const { create, findById, listAll, join, leave, archive } = useChannels(global.address)
 

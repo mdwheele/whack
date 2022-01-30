@@ -1,8 +1,9 @@
 const knex = require('../src/api/utils/database')
 
-afterAll(async(done) => {
-  await knex.destroy()
-  done()
+afterAll(done => {
+  knex.destroy().then(() => {
+    done()
+  })
 })
 
 test('we have whack_test database', async () => {

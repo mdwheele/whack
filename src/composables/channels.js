@@ -1,5 +1,5 @@
 import axios from '../axios'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
 import { sortBy } from 'lodash'
 
 const joinedChannels = ref([])
@@ -11,9 +11,11 @@ const sortedChannels = computed(() => {
 export function useChannels(url) {
   const loading = ref(false)
 
-  onMounted(async () => {
-    joinedChannels.value = await listJoinedChannels()
-  })
+  if (getCurrentInstance()) {
+    onMounted(async () => {
+      joinedChannels.value = await listJoinedChannels()
+    })
+  }
 
   async function create(name) {
     try {
@@ -34,7 +36,7 @@ export function useChannels(url) {
   }
 
   async function findById(id) {
-    const response = await axios.get(`/api/channels/${id}`, {}, {
+    const response = await axios.get(`/api/channels/${id}`, {
       baseURL: url
     })
 
@@ -42,7 +44,7 @@ export function useChannels(url) {
   }
 
   async function listAll() {
-    const response = await axios.get(`/api/channels`, {}, {
+    const response = await axios.get(`/api/channels`, {
       baseURL: url
     })
 
@@ -50,8 +52,8 @@ export function useChannels(url) {
   }
 
   async function listJoinedChannels() {
-    const response = await axios.get(`/api/me/channels`, {}, {
-      baseURL: url
+    const response = await axios.get(`/api/me/channels`, {
+      baseURL: url,
     })
 
     return response.data
@@ -74,7 +76,7 @@ export function useChannels(url) {
   }
 
   async function archive(id) {
-    await axios.delete(`/api/channels/${id}`, {}, {
+    await axios.delete(`/api/channels/${id}`, {
       baseURL: url
     })
 
