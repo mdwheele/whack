@@ -43,17 +43,19 @@ function attachWebSocketServer(server) {
   })
 
   io.on(Events.Connection, socket => {
+    console.log(`${socket.id} has connected`)
+
     socket.on(Events.Message, message => {
       console.log(`Sending message to users in ${message.channel}. Current rooms are ${io.of("/").adapter.rooms}`)
       io.to(message.channel).emit(Events.Message, message)
     })
 
     socket.on(Events.Disconnecting, () => {
-      console.log(`${socket.id} is disconnecting...`)
+      console.log(`${socket.id} is disconnecting`)
     })
 
     socket.on(Events.Disconnect, () => {
-      console.log(`${socket.id} has disconnected...`)
+      console.log(`${socket.id} has disconnected`)
     })
   })
 }
