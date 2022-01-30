@@ -34,8 +34,8 @@ jobs:
       run: |
         echo $PASETO_PRIVATE_KEY | base64 --decode >> var/paseto/key
         echo $PASETO_PUBLIC_KEY | base64 --decode >> var/paseto/key.pub
-        echo $SSL_CERTIFICATE >> var/ssl/whack_chat.crt
-        echo $SSL_KEY >> var/ssl/whack_chat.key
+        echo $SSL_CERTIFICATE | base64 --decode >> var/ssl/whack_chat.crt
+        echo $SSL_KEY | base64 --decode >> var/ssl/whack_chat.key
 
     - name: Install Node 16.x
       uses: actions/setup-node@v1
@@ -46,7 +46,8 @@ jobs:
       run: npm ci
 
     - name: Run Test Suite
-      env: 
+      env:
+        NODE_TLS_REJECT_UNAUTHORIZED: 0 
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
         PASETO_PRIVATE_KEY: var/paseto/key
