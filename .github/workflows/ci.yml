@@ -48,6 +48,8 @@ jobs:
     - name: Run Test Suite
       env:
         NODE_TLS_REJECT_UNAUTHORIZED: 0 
+        SERVER_HOSTNAME: 127.0.0.1
+        MYSQL_HOST: 127.0.0.1
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
         PASETO_PRIVATE_KEY: var/paseto/key
