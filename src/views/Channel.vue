@@ -99,10 +99,8 @@
 
         <!-- Toolbar -->
         <div class="-mt-1.5 flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
-          <div class="space-x-2">
-            <button class="group p-1 rounded hover:bg-gray-100">
-              <Icon name="emoji-happy" outline class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
-            </button>
+          <div class="flex items-center space-x-2">
+            <EmojiPicker />
             <button class="group p-1 rounded hover:bg-gray-100">
               <Icon name="at-symbol" class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
             </button>
@@ -134,11 +132,12 @@ import Icon from 'vue-heroicon-next'
 import Identicon from 'vue-identicon'
 import Modal from '@/components/Common/Modal.vue'
 import Button from '@/components/Common/Button.vue'
+import EmojiPicker from '@/components/EmojiPicker.vue'
 
 export default {
   name: 'Channel',
 
-  components: { Button, Icon, Identicon, Modal },
+  components: { Button, EmojiPicker, Icon, Identicon, Modal },
 
   setup() {
     const { findById, joinedChannels, join } = useChannels()
