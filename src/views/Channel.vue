@@ -78,7 +78,7 @@
       </div>  
 
       <!-- Messages -->
-      <div v-for="message in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50">
+      <div v-for="(message, index) in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50" :data-recent-message="index >= messages.length - 5">
         <Identicon :seed="message.author.username" class="mt-1 w-10 h-10 rounded" />
 
         <div class="flex-1">
@@ -161,10 +161,34 @@ export default {
         // This is a little dirty... it'd be nice if we didn't have
         // to use next tick.
         nextTick(() => {
-          if (chatWindow.value) {
+          if (!chatWindow.value) {
+            return
+          }
+
+          if (shouldScrollToBottom()) {
             chatWindow.value.scrollTop = chatWindow.value.scrollHeight
           }
         })
+      })
+    }
+
+    /**
+     * The last few messages are marked with a data attribute called 
+     * "data-recent-message" and if these are in view when a chat message
+     * is received, then we should scroll to the bottom.
+     */
+    function shouldScrollToBottom() {
+      const scrollToBottomMessages = Array.from(document.querySelectorAll('[data-recent-message=true]'))
+
+      return scrollToBottomMessages.some(el => {
+        const bounding = el.getBoundingClientRect()
+
+        return (
+          bounding.top >= 0 &&
+          bounding.left >= 0 &&
+          bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        )
       })
     }
 
