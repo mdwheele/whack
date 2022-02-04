@@ -13,10 +13,11 @@ export default {
     const shouldRender = ref(false)
     const el = ref()
 
-    const { stop } = useIntersectionObserver(el, ([{ isIntersecting }]) => {
+    useIntersectionObserver(el, ([{ isIntersecting }]) => {
       if (isIntersecting) {
         shouldRender.value = true
-        stop()
+      } else {
+        shouldRender.value = false
       }
     })
 
