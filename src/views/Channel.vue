@@ -100,7 +100,7 @@
         <!-- Toolbar -->
         <div class="-mt-1.5 flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
           <div class="flex items-center space-x-2">
-            <EmojiPicker />
+            <EmojiPicker @selected="insertAtCursor($event.emoji)" />
             <button class="group p-1 rounded hover:bg-gray-100">
               <Icon name="at-symbol" class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
             </button>
@@ -241,11 +241,16 @@ export default {
       return md.render(body)
     }
 
+    function insertAtCursor(text) {
+      form.message += text
+    }
+
     return { 
       form, 
       isMemberOfChannel,
       channel,
       join,
+      insertAtCursor,
       sendCurrentMessage,
       messages,
       chatWindow,
@@ -255,3 +260,13 @@ export default {
   }
 }
 </script>
+
+<style>
+  @media
+  not screen and (min-device-pixel-ratio: 2),
+  not screen and (min-resolution: 192dpi) {
+    span.emoji {
+      margin-right: 10px;
+    }
+  }
+</style>
