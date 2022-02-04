@@ -79,7 +79,7 @@
 
       <!-- Messages -->
       <div v-for="(message, index) in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50" :data-recent-message="index >= messages.length - 5">
-        <Identicon :seed="message.author.username" class="mt-1 w-10 h-10 rounded" />
+        <Identicon :seed="message.author.username" theme="retro" class="mt-1 w-10 h-10 rounded" />
 
         <div class="flex-1">
           <div class="space-x-2">

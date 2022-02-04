@@ -70,7 +70,7 @@
     "socket.io-client": "^4.4.1",
     "tailwindcss": "^3.0.8",
     "vue-heroicon-next": "^0.4.4",
-    "vue-identicon": "0.0.1",
+    "vue-identicon": "^0.1.0",
     "vue-router": "^4.0.12",
     "vue-tippy": "^6.0.0-alpha.43"
   },

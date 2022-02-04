@@ -48,14 +48,14 @@
         <div class="flex-auto h-0 overflow-y-auto min-h-[240px]">
           <div class="px-3">
             <template v-for="(emojis, category) in results" :key="category">
-              <div v-show="emojis.length > 0">
+              <Lazy v-if="emojis.length > 0">
                 <h3 class="bg-white sticky top-0 pb-0.5 mb-2 font-bold text-sm">{{ category }}</h3>
                 <div class="mb-3 -ml-1">
                   <button @click="select(emoji)" v-for="emoji in emojis" :key="emoji.emoji" class="rounded hover:bg-gray-200 pl-2 pr-3 py-0.5" v-tippy :content="`:${emoji.slug}:`">
                     {{ emoji.emoji }}
                   </button>
                 </div>
-              </div>
+              </Lazy>
             </template>
           </div>
         </div>
@@ -72,11 +72,12 @@
 import Icon from 'vue-heroicon-next'
 
 import { ref } from 'vue'
+import Lazy from '@/components/Common/Lazy.vue'
 import useEmoji from '@/composables/emoji'
 
 export default {
   name: 'EmojiPicker',
-  components: { Icon },
+  components: { Icon, Lazy },
 
   setup(props, { emit }) {
     const isOpen = ref(false)
