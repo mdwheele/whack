@@ -78,8 +78,8 @@
       </div>  
 
       <!-- Messages -->
-      <div v-for="message in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50">
-        <Identicon :seed="message.author.username" class="mt-1 w-10 h-10 rounded" />
+      <div v-for="(message, index) in messages" :key="message.id" class="py-2 px-6 flex items-start space-x-4 hover:bg-slate-50" :data-recent-message="index >= messages.length - 5">
+        <Identicon :seed="message.author.username" theme="retro" class="mt-1 w-10 h-10 rounded" />
 
         <div class="flex-1">
           <div class="space-x-2">
@@ -99,10 +99,8 @@
 
         <!-- Toolbar -->
         <div class="-mt-1.5 flex items-center justify-between h-12 bg-white rounded-b-lg border border-t-0 border-gray-200 p-2">
-          <div class="space-x-2">
-            <button class="group p-1 rounded hover:bg-gray-100">
-              <Icon name="emoji-happy" outline class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
-            </button>
+          <div class="flex items-center space-x-2">
+            <EmojiPicker @selected="insertAtCursor($event.emoji)" />
             <button class="group p-1 rounded hover:bg-gray-100">
               <Icon name="at-symbol" class="w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600" />
             </button>
@@ -134,11 +132,12 @@ import Icon from 'vue-heroicon-next'
 import Identicon from 'vue-identicon'
 import Modal from '@/components/Common/Modal.vue'
 import Button from '@/components/Common/Button.vue'
+import EmojiPicker from '@/components/EmojiPicker.vue'
 
 export default {
   name: 'Channel',
 
-  components: { Button, Icon, Identicon, Modal },
+  components: { Button, EmojiPicker, Icon, Identicon, Modal },
 
   setup() {
     const { findById, joinedChannels, join } = useChannels()
@@ -161,10 +160,34 @@ export default {
         // This is a little dirty... it'd be nice if we didn't have
         // to use next tick.
         nextTick(() => {
-          if (chatWindow.value) {
+          if (!chatWindow.value) {
+            return
+          }
+
+          if (shouldScrollToBottom()) {
             chatWindow.value.scrollTop = chatWindow.value.scrollHeight
           }
         })
+      })
+    }
+
+    /**
+     * The last few messages are marked with a data attribute called 
+     * "data-recent-message" and if these are in view when a chat message
+     * is received, then we should scroll to the bottom.
+     */
+    function shouldScrollToBottom() {
+      const scrollToBottomMessages = Array.from(document.querySelectorAll('[data-recent-message=true]'))
+
+      return scrollToBottomMessages.some(el => {
+        const bounding = el.getBoundingClientRect()
+
+        return (
+          bounding.top >= 0 &&
+          bounding.left >= 0 &&
+          bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        )
       })
     }
 
@@ -218,11 +241,16 @@ export default {
       return md.render(body)
     }
 
+    function insertAtCursor(text) {
+      form.message += text
+    }
+
     return { 
       form, 
       isMemberOfChannel,
       channel,
       join,
+      insertAtCursor,
       sendCurrentMessage,
       messages,
       chatWindow,
@@ -232,3 +260,13 @@ export default {
   }
 }
 </script>
+
+<style>
+  @media
+  not screen and (min-device-pixel-ratio: 2),
+  not screen and (min-resolution: 192dpi) {
+    span.emoji {
+      margin-right: 10px;
+    }
+  }
+</style>

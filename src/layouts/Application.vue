@@ -14,7 +14,7 @@
       <Menu>
         <template #trigger>
           <div class="mt-1.5 relative rounded bg-white p-0.5" v-tippy content="mdwheele">
-            <Identicon seed="mdwheele" class="w-6 h-6 rounded" />
+            <Identicon seed="mdwheele" theme="retro" class="w-6 h-6 rounded" />
             <div class="absolute -bottom-0.5 -right-0.5 rounded-full bg-green-600 w-2.5 h-2.5 p-1 ring-2 border border-slate-800 ring-slate-800" />
           </div>
         </template>
